@@ -1,0 +1,52 @@
+# FastAPI / Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environments & Virtual Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Databases (SQLite logs and instances commonly used in local FastAPI dev)
+*.sqlite3
+*.db
+
+# Configuration & Secrets
+config.env
+.secrets
+secrets.*
+
+# IDEs and Editors
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Testing & Coverage
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+coverage.xml
+
+# Logs
+*.log
+logs/
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+
+# bash script files
+*.sh
