@@ -1,9 +1,8 @@
 from openai import OpenAI
 import os
+from config import BASE_URL
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-print('CLIENT', client)
+client = OpenAI(api_key=BASE_URL)
 
 def ask_ai(message: str):
     response = client.chat.completions.create(
@@ -12,5 +11,5 @@ def ask_ai(message: str):
             {"role": "user", "content": message}
         ]
     )
-
+    # print('Response: ', response)
     return response.choices[0].message.content
