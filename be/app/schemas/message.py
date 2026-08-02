@@ -6,14 +6,14 @@ from uuid import UUID
 # Message Schemas
 
 class Sender(BaseModel):
-    id: UUID
+    id: str
     username: str
     location: str | None = None
 
 
 class Message(BaseModel):
-    id: UUID
+    id: str
     sender: Sender
     content: str
-    created_at: datetime
+    created_at: datetime 
     

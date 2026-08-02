@@ -3,14 +3,8 @@ import { BrainIcon } from "lucide-react"
 import { motion, useReducedMotion } from "motion/react"
 import type { MessageAnimationPreset } from "@/lib/message-animations"
 import { MESSAGE_ANIMATIONS } from "@/lib/message-animations"
-// import { Bubble, BubbleContent } from "@/styles/radix-rhea/ui/bubble"
-// import { Message, MessageContent } from "@/styles/radix-rhea/ui/message"
-// import { MessageScrollerItem } from "@/styles/radix-rhea/ui/message-scroller"
 
 
-
-
-// Drop-in inline components replacing the custom imports
 
 function Message({ align, children }: { align: "start" | "end"; children: React.ReactNode }) {
   return (

@@ -1,5 +1,3 @@
-"use client"
-
 import { useChat } from "@ai-sdk/react"
 import {
     ArrowUpIcon,
@@ -79,7 +77,7 @@ const chat = createChat()
     .assistant(
         "The secret is giving it clear context! Think of the AI as a helpful assistant who just walked into the room.\n\nIf you tell it who you are, what you're trying to achieve, and the format you want, it gives much better answers. The more context you provide, the less guessing the AI has to do!"
     )
-    
+
 const initialMessages = chat.get(0)
 const transport = chat.transport({ delayMs: 20 })
 
@@ -227,9 +225,6 @@ export default function ChatPanel() {
                         </form>
                     </CardFooter>
                 </Card>
-                <div className="hidden sm:block px-0.5 text-center text-xs text-muted-foreground">
-                    Demo is read only. Press send to send messages.
-                </div>
             </div>
         </MessageScrollerProvider>
     )
