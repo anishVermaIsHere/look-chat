@@ -1,1 +1,1 @@
-# Look Chat
+# Look Chat - AI App
