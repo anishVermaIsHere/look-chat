@@ -17,6 +17,5 @@ class CreateUser(BaseModel):
     id: UUID
     first_name: str
     last_name: str
-    email: EmailStr
     full_name: str
     contact: UserContact

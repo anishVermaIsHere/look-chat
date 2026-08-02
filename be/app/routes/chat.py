@@ -27,7 +27,7 @@ def chat(data: ChatRequest):
     }
     """
     ai_service = AIService()
-    answer = ai_service.ask_ai(data.message.content)
+    answer = ai_service.ask(data.message.content)
 
     return ChatResponse(
         response=answer
