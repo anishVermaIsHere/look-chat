@@ -9,8 +9,8 @@ print(_uuid)
 # User Schemas
 
 class UserContact(BaseModel):
-    email: EmailStr
     phone: str
+    address: str
     
 
 class CreateUser(BaseModel):
@@ -19,3 +19,5 @@ class CreateUser(BaseModel):
     last_name: str
     full_name: str
     contact: UserContact
+    email: EmailStr
+    password: str

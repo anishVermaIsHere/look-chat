@@ -7,11 +7,18 @@ class AIService():
        self.client = OpenAI(api_key=OPENAI_API_KEY)
 
     def ask(self, message: str) -> str:
-        response = self.client.chat.completions.create(
+        response = self.client.responses.create(
             model="gpt-4o-mini",  # Make sure model name is correct (e.g. gpt-4o-mini)
-            messages=[
-                {"role": "user", "content": message}
+            input=[
+                { 
+                    "role": "user", 
+                    "content": [
+                        {
+                            "type": "input_text",
+                            "text": message
+                        },
+                    ] 
+                }
             ]
         )
-        # print('Response: ', response)
-        return response.choices[0].message.content
+        return response.output_text
