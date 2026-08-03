@@ -1,20 +1,11 @@
-from uuid import uuid4
+from sqlalchemy.orm import Session
 from app.schemas.auth import RegisterRequest, LoginRequest
+from app.services.auth import register_user, login_user
 
 
-def register(data: RegisterRequest):
-    # logic
-    return {
-        "id": uuid4(),
-        "first_name": data.first_name,
-        "last_name": data.last_name,
-        "email": data.email,
-    }
 
+def register(data: RegisterRequest, db: Session):
+    return register_user(data, db)
 
-def login(data: LoginRequest):
-    # logic
-    return {
-        "access_token": "jwt_access_token",
-        "refresh_token": "jwt_refresh_token",
-    }
+def login(data: LoginRequest, db: Session):
+    return login_user(data, db)
