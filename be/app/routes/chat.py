@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 from app.schemas.chat import ChatRequest, ChatResponse
 from app.services.ai import AIService
 

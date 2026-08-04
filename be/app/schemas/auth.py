@@ -1,6 +1,6 @@
 from uuid import UUID
 from pydantic import BaseModel, EmailStr
-from app.schemas.users import User
+from app.schemas.users import CreateUser
 
 
 # ---------- Register ----------
@@ -29,4 +29,4 @@ class LoginRequest(BaseModel):
 class LoginResponse(BaseModel):
     access_token: str
     refresh_token: str
-    user: User
+    user: CreateUser

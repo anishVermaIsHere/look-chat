@@ -1,5 +1,6 @@
-from app.schemas.users import CreateUser
 from uuid import UUID, uuid4
+
+from app.schemas.users import CreateUser
 
 
 

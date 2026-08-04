@@ -1,11 +1,13 @@
 from sqlalchemy.orm import Session
+
 from app.schemas.auth import RegisterRequest, LoginRequest
-from app.services.auth import register_user, login_user
+from app.services.auth import AuthService
 
 
+auth_service = AuthService()
 
 def register(data: RegisterRequest, db: Session):
-    return register_user(data, db)
+    return auth_service.register(data, db)
 
 def login(data: LoginRequest, db: Session):
-    return login_user(data, db)
+    return auth_service.login(data, db)
