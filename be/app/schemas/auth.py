@@ -1,10 +1,9 @@
 from uuid import UUID
 from pydantic import BaseModel, EmailStr
-from app.schemas.users import CreateUser
+from app.schemas.users import UserResponse
 
 
 # ---------- Register ----------
-
 class RegisterRequest(BaseModel):
     first_name: str
     last_name: str
@@ -20,7 +19,6 @@ class RegisterResponse(BaseModel):
 
 
 # ---------- Login ----------
-
 class LoginRequest(BaseModel):
     email: EmailStr
     password: str
@@ -29,4 +27,4 @@ class LoginRequest(BaseModel):
 class LoginResponse(BaseModel):
     access_token: str
     refresh_token: str
-    user: CreateUser
+    user: UserResponse # or create_user.model_dump(exclude={"password"})
