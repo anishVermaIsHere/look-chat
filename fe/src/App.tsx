@@ -1,9 +1,15 @@
-import { type ReactNode } from "react"
-import AppLayout from "./components/common/app-layout"
+import { Toaster } from "@/components/ui/toast"
+import AppErrorProvider from "@/providers/error-provider"
+import AppRouteProvider from "@/providers/routes-provider"
 
-export function App({ children }: { children: ReactNode }) {
+
+
+export function App() {
   return (
-    <AppLayout>{children}</AppLayout>
+    <AppErrorProvider>
+      <AppRouteProvider />
+      <Toaster />
+    </AppErrorProvider>
   )
 }
 

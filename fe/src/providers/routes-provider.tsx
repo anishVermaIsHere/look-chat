@@ -1,3 +1,4 @@
+import appRoutes from "@/routes/app-routes"
 import { RouterProvider, createBrowserRouter } from "react-router-dom"
 
 

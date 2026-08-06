@@ -1,26 +1,29 @@
-import { Suspense }  from "react"
+import LazyLoader, { ChatPage, HomePage } from "@/components/common/lazy"
+import ROUTES from "."
+import AuthLayout from "@/components/common/auth-layout"
+
+
+const { HOME, CHAT } = ROUTES;
 
 const appRoutes = [
-  {
-    element: <ProtectedPage element={<AppLayout />}/>,
+   {
+    element: <AuthLayout />,
     children: [
       {
-        path: HOME,
-        element: (
-          <Suspense fallback={<Spinner />}>
-            <LoginPage />
-          </Suspense>
-        ),
+        element: <LazyLoader />,
+        children: [
+          {
+            path: HOME,
+            element: <HomePage />,
+          },
+          {
+            path: CHAT,
+            element: <ChatPage />,
+          },
+        ],
       },
-      {
-        path: LOGIN,
-        element: (
-          <Suspense fallback={<Spinner />}>
-            <LoginPage />
-          </Suspense>
-        ),
-      },
-    }
+    ],
+  },
 ];
 
 export default appRoutes;
