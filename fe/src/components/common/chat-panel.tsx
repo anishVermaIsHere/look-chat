@@ -49,6 +49,7 @@ import {
     MessageScrollerViewport,
 } from "@/components/ui/message-scroller"
 import { TooltipProvider, Tooltip, TooltipTrigger } from "@/components/ui/tooltip"
+import useAuthStore from "@/store/auth"
 
 const chat = createChat()
     .user(
@@ -82,6 +83,7 @@ const initialMessages = chat.get(0)
 const transport = chat.transport({ delayMs: 20 })
 
 export default function ChatPanel() {
+    const { user } = useAuthStore(s=>s)
     const { messages, sendMessage, status, setMessages } = useChat({
         messages: initialMessages,
         transport,
@@ -108,10 +110,9 @@ export default function ChatPanel() {
                             </Button>
                             <TooltipProvider>
                                 <Tooltip>
-                                    <TooltipTrigger>
-                                        <p>Reset</p>
-                                    </TooltipTrigger>
+                                    <TooltipTrigger></TooltipTrigger>
                                 </Tooltip>
+                                <span>{user?.fullName}</span>
                             </TooltipProvider>
                         </CardAction>
                     </CardHeader>

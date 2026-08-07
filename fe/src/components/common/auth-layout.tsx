@@ -15,6 +15,7 @@ const AuthLayout = ({ children }: { children?: ReactNode })  => {
   const isProtectedRoute = protectedRoutes.some((route) =>matchPath(route, location.pathname));
   const isPublicRoute = publicRoutes.some((route) =>matchPath(route, location.pathname));
     
+  
   if (isAuthenticated && isProtectedRoute || (!isAuthenticated && isPublicRoute)) {
     return <Outlet />;
   } else if (!isAuthenticated && isProtectedRoute) {

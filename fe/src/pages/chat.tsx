@@ -1,8 +1,9 @@
+import AppLayout from "@/components/common/app-layout"
 
 
 const ChatPage = () => {
   return (
-    <div>ChatPage</div>
+    <AppLayout />
   )
 }
 

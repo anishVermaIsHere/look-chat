@@ -63,12 +63,12 @@ class AuthService():
             raise Exception("Incorrect password")
 
         jwt_service = JWTService()
-        print("LOGIN SUCCESS")
 
         access_token = jwt_service.create_token(user.id, "access")
         refresh_token = jwt_service.create_token(user.id, "refresh")
 
         return {
+            "success": True,
             "access_token": access_token,
             "refresh_token": refresh_token,
             "user": UserResponse.model_validate(user)

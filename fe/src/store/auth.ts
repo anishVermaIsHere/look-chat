@@ -1,9 +1,10 @@
+import type { User } from "@/schemas/common";
 import { create } from "zustand";
 
 export type AuthStoreType = {
-  user: any | null;
+  user: User | null;
   isAuthenticated: boolean;
-  setUser: (user: any | null) => void;
+  setUser: (user: User | null) => void;
   logout: () => void;
 };
 
