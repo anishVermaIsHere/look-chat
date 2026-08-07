@@ -1,9 +1,10 @@
 # Look Chat - AI App
 
 
+
 ### Structure & Tech Stack
 
-| Folder | Tech |
-|--------|---------|-------------|
+| Folder | Purpose |  
+|--------|---------|
 | `be/` | FastAPI, PostgreSQL |
 | `fe/` | React, ShadeCN, Tailwind |
