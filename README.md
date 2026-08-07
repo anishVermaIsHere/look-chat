@@ -4,7 +4,7 @@
 
 ### Structure & Tech Stack
 
-| Folder | Purpose |  
+| Folder | Tech |  
 |--------|---------|
 | `be/` | FastAPI, PostgreSQL |
 | `fe/` | React, ShadeCN, Tailwind |
