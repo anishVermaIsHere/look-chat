@@ -13,5 +13,5 @@ def register(user: RegisterRequest, res: Response, db: Session = Depends(get_db)
     return auth.register(user, db, res)
 
 @router.post("/login")
-def login(user: LoginRequest, res: Response, db:Session = Depends(get_db), ):
+def login(user: LoginRequest, res: Response, db: Session = Depends(get_db)):
     return auth.login(user, db, res)

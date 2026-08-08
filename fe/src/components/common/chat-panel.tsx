@@ -50,6 +50,7 @@ import {
 } from "@/components/ui/message-scroller"
 import { TooltipProvider, Tooltip, TooltipTrigger } from "@/components/ui/tooltip"
 import useAuthStore from "@/store/auth"
+import { ProfileMenu } from "./profile-menu"
 
 const chat = createChat()
     .user(
@@ -108,12 +109,7 @@ export default function ChatPanel() {
                             >
                                 <RotateCwIcon />
                             </Button>
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger></TooltipTrigger>
-                                </Tooltip>
-                                <span>{user?.fullName}</span>
-                            </TooltipProvider>
+                            <ProfileMenu />
                         </CardAction>
                     </CardHeader>
                     <CardContent className="flex-1 overflow-hidden p-0">

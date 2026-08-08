@@ -24,7 +24,6 @@ export default function Login() {
 
   async function onSubmit(data: LoginSchema){
     try {
-      // setLoading(true);
       await new Promise((resolve) => setTimeout(resolve, 2000));
       const res = await login(data);
       if (res?.status === 200) {
@@ -35,21 +34,13 @@ export default function Login() {
           firstName: user?.first_name,
           lastName: user?.last_name,
           fullName: user?.full_name,
-        } || null)
+        })
         setTimeout(()=>navigate(`/chat`),1000);
       }
     } catch (error) {
       console.error("Error while login", error);
       toast.add({ type: "error", priority: "high", description: error?.response?.data?.message });
-    } finally {
     }
-  }
-
-  if (form.formState.isSubmitSuccessful) {
-    return <section className="flex flex-col justify-center items-center min-h-screen">
-      <p className="text-gray-500 font-medium text-lg">Redirecting...</p>
-      {/* <Dots /> */}
-    </section>
   }
 
   return (

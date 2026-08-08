@@ -1,5 +1,8 @@
+from fastapi import Request, HTTPException
+from fastapi.responses import JSONResponse
 from uuid import uuid4
 from sqlalchemy.orm import Session
+
 
 from app.database.models.user import User
 from app.utils.security import SecurePassword
@@ -73,3 +76,22 @@ class AuthService():
             "refresh_token": refresh_token,
             "user": UserResponse.model_validate(user)
         }
+
+    def self(self, req: Request, db: Session):
+        
+        current_user = req.state.user
+        user_id = current_user.get('sub')
+        user = db.query(User).filter(User.id == user_id).first()
+
+        if not user:
+            raise HTTPException(status_code=404, detail="User not found")
+
+        user_data = {
+            column.name: getattr(user, column.name)
+            for column in user.__table__.columns
+        }
+        user_data.pop("password", None)  
+        user_data.pop("created_at", None)
+        
+        return {"authenticated": True, "user": user_data }
+        
