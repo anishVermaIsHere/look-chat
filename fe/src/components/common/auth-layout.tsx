@@ -27,7 +27,6 @@ const AuthLayout = ()  => {
   } else if (!isAuthenticated && isProtectedRoute) {
     return <Navigate to="/" state={{ from: location }} replace />;
   } else {
-    console.log('homne last')
     return <Navigate to="/chat" />;
   }
 }

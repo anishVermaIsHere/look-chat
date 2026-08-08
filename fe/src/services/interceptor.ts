@@ -4,7 +4,7 @@ import { refresh } from "./apis/auth";
 // import useAuthStore as authStore from "@/store/auth"
 
 const axiosInstance = axios.create({
-    baseURL: AppConfig.baseUrl,
+    baseURL: `${AppConfig.baseUrl}/api/v1`,
     headers: {
         'Content-Type': 'application/json'
     }

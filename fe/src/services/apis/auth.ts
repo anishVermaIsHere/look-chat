@@ -3,7 +3,7 @@ import type { LoginSchema } from "@/schemas/common"
 
 async function login(credentials: LoginSchema) {
   try {
-    return await axiosInstance.post(`/api/v1/auth/login`, credentials, { withCredentials: true });
+    return await axiosInstance.post(`/auth/login`, credentials, { withCredentials: true });
   } catch (error) {
     console.log("ERROR", error)
   }
@@ -11,7 +11,7 @@ async function login(credentials: LoginSchema) {
 
 async function getSelf() {
   try {
-    return await axiosInstance.get(`/api/v1/users/profile`, { withCredentials: true });
+    return await axiosInstance.get(`/users/profile`, { withCredentials: true });
   } catch (error) {
     console.log("ERROR", error);
     return null
