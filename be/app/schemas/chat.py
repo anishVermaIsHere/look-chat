@@ -1,11 +1,16 @@
 from pydantic import BaseModel
-from app.schemas.message import Message
+from uuid import UUID
+
+from app.schemas.message import Sender
 
 
-# Chat Schema
-class ChatRequest(BaseModel):
-    message: Message
+class MessagePayload(BaseModel):
+    chat_id: str | None = None
+    content: str
+    sender: Sender
 
 
 class ChatResponse(BaseModel):
-    response: str
+    chat_id: str
+    
+

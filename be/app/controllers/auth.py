@@ -8,7 +8,7 @@ from app.config import ACCESS_TOKEN_EXPIRE_HOURS, REFRESH_TOKEN_EXPIRE_DAYS
 
 auth_service = AuthService()
 
-def register(data: RegisterRequest, db: Session, res: Response):
+def register(data: RegisterRequest, db: Session):
     return auth_service.register(data, db)
 
 def login(data: LoginRequest, db: Session, res: Response):

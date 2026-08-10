@@ -14,14 +14,15 @@ from app.schemas.users import UserResponse
 
 
 class AuthService():
-    # @staticmethod # it rejects self param
-    def register(self, payload: RegisterRequest, db: Session) -> RegisterResponse:
+    @staticmethod # it rejects self param
+    def register(payload: RegisterRequest, db: Session) -> RegisterResponse:
         # Check if user already exists
         user = db.query(User).filter(
             User.email == payload.email
         ).first()
 
         if user:
+            print('BEFORE ERROR')
             raise Exception("Email already exists")
         secure_password = SecurePassword()
 

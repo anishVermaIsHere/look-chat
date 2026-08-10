@@ -10,6 +10,7 @@ async def verify_auth(req: Request, next):
 
     jwt_service = JWTService()
     token = req.cookies.get("_at")
+
     
     if not token:
         return JSONResponse(status_code=401, content={ "message": "Unauthorised" })

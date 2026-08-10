@@ -1,5 +1,6 @@
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
+from sqlalchemy.orm import configure_mappers
 
 from app.database.database import Base, engine
 from app.routes.chat import router as chat_router
@@ -7,6 +8,7 @@ from app.routes.auth import router as auth_router
 from app.routes.user import router as user_router
 from app.middleware.auth import verify_auth
 
+configure_mappers()
 app = FastAPI(title="Look Chat API")
 
 origins = [
