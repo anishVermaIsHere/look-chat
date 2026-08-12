@@ -6,8 +6,8 @@ from uuid import UUID
 # Message Schemas
 
 class Location(BaseModel):
-    latitude: str | None = None
-    longitude: str | None = None
+    latitude: float | None = None
+    longitude: float | None = None
 
 class Sender(BaseModel):
     id: UUID | str

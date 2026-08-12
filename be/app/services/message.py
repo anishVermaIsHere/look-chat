@@ -5,8 +5,8 @@ from app.schemas.message import Sender
 
 class MessageService:
 
-    def create(self, db: Session, chat_id, sender: Sender, content: str) -> Message:
-        message = Message(chat_id=chat_id, sender=sender, content=content)
+    def create(self, db: Session, chat_id, sender: dict, content: str, role: str) -> Message:
+        message = Message(chat_id=chat_id, sender=sender, content=content, role=role)
         db.add(message)
         db.flush()
 

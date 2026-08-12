@@ -17,3 +17,17 @@ export type User = {
   contact: { phone: string, address: string },
   email: string
 }
+
+
+export const sendMessageSchema = z.object({
+  sender: z.object({
+    id: z.string(),
+    location: z.object({
+      latitude: z.coerce.number(),
+      longitude: z.coerce.number()
+    }),
+  }),
+  content: z.string()
+});
+
+export type SendMessageSchema = z.infer<typeof sendMesageSchema>

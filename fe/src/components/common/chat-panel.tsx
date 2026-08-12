@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { useChat } from "@ai-sdk/react"
+import { DefaultChatTransport } from 'ai';
 import {
     ArrowUpIcon,
     GlobeIcon,
@@ -48,9 +50,11 @@ import {
     MessageScrollerProvider,
     MessageScrollerViewport,
 } from "@/components/ui/message-scroller"
-import { TooltipProvider, Tooltip, TooltipTrigger } from "@/components/ui/tooltip"
-import useAuthStore from "@/store/auth"
 import { ProfileMenu } from "./profile-menu"
+import { AppConfig } from "@/config/app-config"
+import { API_ENDPOINTS } from "@/services/apis/endpoints"
+import { getUserLocation } from "@/utils";
+
 
 const chat = createChat()
     .user(
@@ -80,17 +84,62 @@ const chat = createChat()
         "The secret is giving it clear context! Think of the AI as a helpful assistant who just walked into the room.\n\nIf you tell it who you are, what you're trying to achieve, and the format you want, it gives much better answers. The more context you provide, the less guessing the AI has to do!"
     )
 
-const initialMessages = chat.get(0)
-const transport = chat.transport({ delayMs: 20 })
+const initialMessages = chat.get(0);
 
 export default function ChatPanel() {
-    const { user } = useAuthStore(s=>s)
+    const [input, setInput] = useState('What is AI?');
+    const [location, setLocation] = useState({ latitude: 0.0, longitude: 0.0 });
     const { messages, sendMessage, status, setMessages } = useChat({
-        messages: initialMessages,
-        transport,
-    })
+        transport: new DefaultChatTransport({
+            api: `${AppConfig.baseUrl}/api/v1${API_ENDPOINTS.CHAT.SEND_MESSAGE}`,
+            credentials: "include",
+            fetch: async (url, options) => {
+                return fetch(url, {
+                    ...options,
+                    method: "POST",
+                    credentials: "include",
+                });
+            },
+            prepareSendMessagesRequest: ({ messages }) => {
+                const lastMessage = messages[messages.length - 1];
+                const textPart = lastMessage?.parts.find(
+                    (part) => part.type === "text"
+                );
+                return {
+                    body: {
+                    sender: {
+                        id: "user-id",
+                        location: {
+                        latitude: location.latitude,
+                        longitude: location.longitude,
+                        },
+                    },
+
+                    content: textPart?.text ?? "",
+                    },
+                };
+            },
+        }),
+    });
+    
     const nextMessage = chat.next(messages)
+    
     const isBusy = status === "submitted" || status === "streaming"
+
+    useEffect(() => {
+        async function getUserCurrentLocation() {
+            try {
+                const location = await getUserLocation();
+                setLocation({
+                    longitude: location?.longitude,
+                    latitude: location?.latitude
+                });
+            } catch (error) {
+                console.error("Failed to get location:", error);
+            }
+        }
+        getUserCurrentLocation();
+    }, []);
 
     return (
         <MessageScrollerProvider>
@@ -150,16 +199,17 @@ export default function ChatPanel() {
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault()
-                                if (!nextMessage || isBusy) {
+                                if (!input.trim() || isBusy) {
                                     return
                                 }
-                                void sendMessage(nextMessage)
+                                sendMessage({ text: input })
+                                setInput("")
                             }}
                             className="w-full"
                         >
-                            <InputGroup>
+                            <InputGroup className="min-w-full!">
                                 <div className="h-14 w-full px-3 py-2.5">
-                                    <span
+                                    {/* <span
                                         className="line-clamp-2 opacity-60 data-[status=ready]:opacity-100"
                                         data-status={status}
                                     >
@@ -170,8 +220,22 @@ export default function ChatPanel() {
                                                 No messages queued. Reset the conversation.
                                             </span>
                                         )}
-                                    </span>
+                                    </span> */}
+                                    <textarea
+                                        value={input}
+                                        onChange={(e) => setInput(e.target.value)}
+                                        placeholder="Message..."
+                                        disabled={isBusy}
+                                        className="h-14 w-full resize-none border-0 bg-transparent px-3 py-2.5 outline-none"
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter" && !e.shiftKey) {
+                                                e.preventDefault();
+                                                e.currentTarget.form?.requestSubmit();
+                                            }
+                                        }}
+                                    />
                                 </div>
+
                                 <InputGroupAddon align="block-end" className="pt-1">
                                     <DropdownMenu>
                                         {/* 1. The Trigger goes inside DropdownMenu and wraps the button */}

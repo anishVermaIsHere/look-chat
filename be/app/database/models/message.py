@@ -23,7 +23,7 @@ class Message(Base):
     chat_id = Column(UUID(as_uuid=True), ForeignKey("chats.id", ondelete="CASCADE"), nullable=False)
     sender = Column(JSONB, nullable=False, server_default=text("'{}'::jsonb"))
     content = Column(String, nullable=False)
-    role = Column(Enum(MessageRole), nullable=False, default=MessageRole.USER)
+    role = Column(Enum(MessageRole, values_callable=lambda enum_cls: [member.value for member in enum_cls]), nullable=False, default=MessageRole.USER.value)
     # relationship("Chat"): Optional but recommended. It lets SQLAlchemy automatically navigate between related objects (message.chat and chat.messages) without you writing extra queries.
     chat = relationship("Chat", back_populates="messages")
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
