@@ -1,29 +1,23 @@
-import axiosInstance from "../interceptor"
+import axiosInstance from ".."
 import type { LoginSchema } from "@/schemas/common"
+import { API_ENDPOINTS } from "@/services/apis/endpoints"
+
+const { AUTH } = API_ENDPOINTS;
 
 async function login(credentials: LoginSchema) {
   try {
-    return await axiosInstance.post(`/auth/login`, credentials, { withCredentials: true });
+    return await axiosInstance.post(AUTH.LOGIN, credentials, { withCredentials: true });
   } catch (error) {
     console.log("ERROR", error)
   }
 }
 
-async function getSelf() {
+async function logout(){
   try {
-    return await axiosInstance.get(`/users/profile`, { withCredentials: true });
+    return await axiosInstance.post(AUTH.LOGOUT, {}, { withCredentials: true });
   } catch (error) {
-    console.log("ERROR", error);
-    return null
+    console.log("ERROR", error)
   }
 }
 
-async function refresh(){
-
-}
-
-async function logout(){
-
-}
-
-export { login, logout, refresh, getSelf }
+export { login, logout }

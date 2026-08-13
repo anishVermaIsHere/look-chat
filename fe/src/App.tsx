@@ -3,7 +3,6 @@ import AppErrorProvider from "@/providers/error-provider"
 import AppRouteProvider from "@/providers/routes-provider"
 
 
-
 export function App() {
   return (
     <AppErrorProvider>

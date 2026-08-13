@@ -3,6 +3,7 @@ import {
   LogOutIcon,
   SettingsIcon,
   UserIcon,
+  ChevronDown
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
@@ -16,13 +17,12 @@ import useAuthStore from "@/store/auth"
 
 
 export function ProfileMenu() {
-    const { user } = useAuthStore(s=>s);
-
+  const { user, logOut } = useAuthStore(s=>s);
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<Button variant="outline">{user?.fullName}</Button>} />
+      <DropdownMenuTrigger render={<Button variant="outline" className="rounded-full">{user?.firstName.slice(0,1)}</Button>} />
       <DropdownMenuContent>
-        <DropdownMenuItem>
+        {/* <DropdownMenuItem>
           <UserIcon />
           Profile
         </DropdownMenuItem>
@@ -34,8 +34,8 @@ export function ProfileMenu() {
           <SettingsIcon />
           Settings
         </DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem variant="destructive">
+        <DropdownMenuSeparator /> */}
+        <DropdownMenuItem variant="destructive" onClick={logOut}>
           <LogOutIcon />
           Log out
         </DropdownMenuItem>

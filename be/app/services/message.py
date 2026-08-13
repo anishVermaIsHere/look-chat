@@ -11,3 +11,13 @@ class MessageService:
         db.flush()
 
         return message
+
+    def to_dict(self, message: Message):
+        return {
+            "id": message.id,
+            "chat_id": message.chat_id,
+            "sender": message.sender,
+            "content": message.content,
+            "role": message.role.value if hasattr(message.role, "value") else message.role,
+            "created_at": message.created_at,
+        }

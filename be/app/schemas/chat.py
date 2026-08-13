@@ -1,7 +1,10 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from uuid import UUID
+from datetime import datetime
+from typing import Any
 
 from app.schemas.message import Sender
+from app.database.models.message import MessageRole
 
 
 class MessagePayload(BaseModel):
@@ -9,8 +12,20 @@ class MessagePayload(BaseModel):
     content: str
     sender: Sender
 
+    # messages: list[dict[str, Any]]
+
+
+class MessageResponse(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    id: UUID
+    sender: Sender
+    content: str
+    role: MessageRole
+    created_at: datetime
 
 class ChatResponse(BaseModel):
     chat_id: str
+    messages: list[MessageResponse]
     
 

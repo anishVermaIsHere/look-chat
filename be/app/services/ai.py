@@ -7,3 +7,6 @@ class AIService():
 
     def ask(self, message: str) -> str:
         return self.provider.ask(message)
+
+    def stream(self, message: str):
+        return self.provider.stream(message)

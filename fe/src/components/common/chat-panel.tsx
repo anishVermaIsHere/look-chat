@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useChat } from "@ai-sdk/react"
-import { DefaultChatTransport } from 'ai';
+import { TextStreamChatTransport  } from 'ai';
 import {
     ArrowUpIcon,
     GlobeIcon,
@@ -11,8 +11,6 @@ import {
     RotateCwIcon,
     TelescopeIcon,
 } from "lucide-react"
-
-import { createChat, getMessageText } from "@/lib/ai"
 import { MessageAnimated } from "@/components/common/message-animated"
 import { Button } from "@/components/ui/button"
 import {
@@ -56,41 +54,11 @@ import { API_ENDPOINTS } from "@/services/apis/endpoints"
 import { getUserLocation } from "@/utils";
 
 
-const chat = createChat()
-    .user(
-        "I'm learning how AI works, but I'm confused. When I ask an AI a question, does it actually know things like a human does, or is it just guessing the next word?"
-    )
-    .sleep(1000)
-    .assistant(
-        "That's one of the best questions to start with! At its core, AI works like a super-smart autocomplete. It doesn't 'know' facts the way humans do—it predicts the most likely next word based on patterns learned from reading billions of sentences.\n\nThink of it like learning to finish someone else's sentences. Because it has read so much, its 'guesses' end up sounding remarkably smart and helpful!"
-    )
-    .user(
-        "That makes sense! But if it's just predicting words, how does it answer questions about stuff happening today, like live sports scores or current news?"
-    )
-    .sleep(1000)
-    .assistant(
-        "Great observation! On its own, a basic AI model only knows things up to the day its training stopped. To answer real-time questions, developers connect it to search tools.\n\nWhen you ask about today's news, the AI quietly searches the web first, reads the top results, and then uses that fresh information to build its answer for you in real time."
-    )
-    .user(
-        "Ah! But what if the search results have wrong information or rumors? Wouldn't the AI just repeat those mistakes?"
-    )
-    .sleep(1000)
-    .assistant(
-        "It definitely can! That's why modern AI systems use cross-checking rules. Instead of trusting the first link it finds, the system compares multiple reliable sources before writing a reply.\n\nIt's just like a good journalist—it checks two or three sources before sharing the story with you, which cuts down on accidental mistakes."
-    )
-    .user("Got it! So what's the best way for a beginner like me to get good answers from an AI?")
-    .sleep(1000)
-    .assistant(
-        "The secret is giving it clear context! Think of the AI as a helpful assistant who just walked into the room.\n\nIf you tell it who you are, what you're trying to achieve, and the format you want, it gives much better answers. The more context you provide, the less guessing the AI has to do!"
-    )
-
-const initialMessages = chat.get(0);
-
 export default function ChatPanel() {
-    const [input, setInput] = useState('What is AI?');
+    const [input, setInput] = useState("");
     const [location, setLocation] = useState({ latitude: 0.0, longitude: 0.0 });
     const { messages, sendMessage, status, setMessages } = useChat({
-        transport: new DefaultChatTransport({
+        transport: new TextStreamChatTransport({
             api: `${AppConfig.baseUrl}/api/v1${API_ENDPOINTS.CHAT.SEND_MESSAGE}`,
             credentials: "include",
             fetch: async (url, options) => {
@@ -122,9 +90,19 @@ export default function ChatPanel() {
         }),
     });
     
-    const nextMessage = chat.next(messages)
-    
     const isBusy = status === "submitted" || status === "streaming"
+
+    const resetChat = () => setMessages([]);
+
+    const submitMessage = (e) => {
+        e.preventDefault();
+        if (!input.trim() || isBusy) {
+            return
+        }
+        sendMessage({ text: input });
+        setInput("");
+    }
+
 
     useEffect(() => {
         async function getUserCurrentLocation() {
@@ -143,35 +121,35 @@ export default function ChatPanel() {
 
     return (
         <MessageScrollerProvider>
-            <div className="relative flex flex-col items-center gap-4">
-                <Card className="mx-auto h-screen sm:h-140 w-full max-w-2xl gap-0 pt-0 bg-main">
+            <div className="relative w-full flex flex-col items-center gap-4">
+                <Card className="mx-auto h-screen w-full gap-0 pt-0 bg-main">
                     <CardHeader className="pt-2 pb-2 px-4 gap-1 border-b bg-[#1f1c2c]">
-                        <CardTitle>Look Chat</CardTitle>
-                        <CardDescription>How can I help you today?</CardDescription>
-                        <CardAction>
+                        <CardTitle>Look</CardTitle>
+                        <CardDescription>AI Assistant</CardDescription>
+                        <CardAction className="flex gap-4">
                             <Button
                                 variant="outline"
                                 size="icon"
                                 aria-label="Reset conversation"
-                                onClick={() => setMessages(initialMessages)}
+                                onClick={resetChat}
                                 isDisabled={isBusy}
+                                className="w-20 flex gap-2"
                             >
-                                <RotateCwIcon />
+                                <RotateCwIcon /> Reset
                             </Button>
                             <ProfileMenu />
                         </CardAction>
                     </CardHeader>
-                    <CardContent className="flex-1 overflow-hidden p-0">
+                    <CardContent className="flex-1 w-full overflow-hidden p-0">
                         {!messages.length ? (
                             <Empty className="h-full">
                                 <EmptyHeader>
                                     <EmptyMedia variant="icon">
                                         <MessageCircleDashedIcon />
                                     </EmptyMedia>
-                                    <EmptyTitle>Morning, Look!</EmptyTitle>
+                                    <EmptyTitle>Hi! I am Look, your AI Assistant</EmptyTitle>
                                     <EmptyDescription>
-                                        What are we working on today? Press send to start a new
-                                        conversation
+                                        What's on your mind? Ask anything
                                     </EmptyDescription>
                                 </EmptyHeader>
                             </Empty>
@@ -197,18 +175,11 @@ export default function ChatPanel() {
                     </CardContent>
                     <CardFooter className="flex-col gap-2">
                         <form
-                            onSubmit={(e) => {
-                                e.preventDefault()
-                                if (!input.trim() || isBusy) {
-                                    return
-                                }
-                                sendMessage({ text: input })
-                                setInput("")
-                            }}
+                            onSubmit={submitMessage}
                             className="w-full"
                         >
-                            <InputGroup className="min-w-full!">
-                                <div className="h-14 w-full px-3 py-2.5">
+                            <InputGroup className="max-w-2xl mx-auto overflow-hidden">
+                                <div className="h-14 w-full px-3 py-2.5 bg-[#1f1c2c]">
                                     {/* <span
                                         className="line-clamp-2 opacity-60 data-[status=ready]:opacity-100"
                                         data-status={status}
@@ -224,7 +195,7 @@ export default function ChatPanel() {
                                     <textarea
                                         value={input}
                                         onChange={(e) => setInput(e.target.value)}
-                                        placeholder="Message..."
+                                        placeholder="Ask anything..."
                                         disabled={isBusy}
                                         className="h-14 w-full resize-none border-0 bg-transparent px-3 py-2.5 outline-none"
                                         onKeyDown={(e) => {
@@ -236,7 +207,7 @@ export default function ChatPanel() {
                                     />
                                 </div>
 
-                                <InputGroupAddon align="block-end" className="pt-1">
+                                <InputGroupAddon align="block-end" className="pt-1 bg-[#1f1c2c]">
                                     <DropdownMenu>
                                         {/* 1. The Trigger goes inside DropdownMenu and wraps the button */}
                                         <DropdownMenuTrigger render={<InputGroupButton />}>
@@ -251,7 +222,7 @@ export default function ChatPanel() {
                                         </DropdownMenuTrigger>
 
                                         {/* 2. DropdownMenuContent wraps the menu items */}
-                                        <DropdownMenuContent side="top" align="start" className="w-44">
+                                        {/* <DropdownMenuContent side="top" align="start" className="w-44">
                                             <DropdownMenuItem>
                                                 <PaperclipIcon />
                                                 Add Photos & Files
@@ -269,13 +240,13 @@ export default function ChatPanel() {
                                                 <GlobeIcon />
                                                 Web Search
                                             </DropdownMenuItem>
-                                        </DropdownMenuContent>
+                                        </DropdownMenuContent> */}
                                     </DropdownMenu>
                                     <InputGroupButton
                                         type="submit"
                                         variant="default"
                                         size="icon-sm"
-                                        isDisabled={!nextMessage || isBusy}
+                                        isDisabled={!input.trim() || isBusy}
                                         className="ml-auto"
                                     >
                                         <ArrowUpIcon />

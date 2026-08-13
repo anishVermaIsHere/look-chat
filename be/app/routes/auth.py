@@ -12,6 +12,18 @@ router = APIRouter(prefix="/auth", tags=["Auth"])
 def register(user: RegisterRequest, res: Response, db: Session = Depends(get_db)):
     return auth.register(user, db)
 
+
 @router.post("/login")
 def login(user: LoginRequest, res: Response, db: Session = Depends(get_db)):
     return auth.login(user, db, res)
+
+
+@router.post("/logout")
+def logout(response: Response):
+    response.delete_cookie(key="_at", path="/")
+    response.delete_cookie(key="_rt", path="/")
+
+    return {
+        "message": "Logged out successfully",
+        "success": True
+    }

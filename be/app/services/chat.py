@@ -10,7 +10,7 @@ from app.services.assistant import AssistantService
 from app.services.message import MessageService
 from app.services.ai import AIService
 from app.llm.open_ai import OpenAIProvider
-from app.utils.chat import generate_chat_title
+from app.utils.chat import generate_chat_title, convert_messages
 
 
 class ChatService:
@@ -69,10 +69,79 @@ class ChatService:
 
         return {
             "chat_id": chat.id,
-            "user_message": user_message,
-            "assistant_message": assistant_message
+            "messages": [
+                message_service.to_dict(user_message),
+                message_service.to_dict(assistant_message)
+            ]
         }
-    
+
+    def stream_message(self, db: Session, payload: MessagePayload):
+
+        chat = None
+
+        if payload.chat_id:
+            chat = self.get_by_id(payload.chat_id, db)
+
+            if not chat:
+                raise HTTPException(
+                    status_code=404,
+                    detail="Chat not found"
+                )
+
+        if chat is None:
+            chat_title = generate_chat_title(payload.content)
+            chat = self.create(db, chat_title)
+
+        message_service = MessageService()
+
+        # Save user message
+        message_service.create(
+            db=db,
+            chat_id=chat.id,
+            sender=payload.sender.model_dump(mode="json"),
+            content=payload.content,
+            role=MessageRole.USER.value
+        )
+
+        db.commit()
+
+        # Stream AI
+        open_ai_provider = OpenAIProvider()
+        ai_service = AIService(open_ai_provider)
+        assistant_service = AssistantService()
+
+        answer = ""
+
+        messages = [
+            {
+                "role": "user",
+                "content": payload.content
+            }
+        ]
+
+        for chunk in ai_service.stream(messages):
+            answer += chunk
+
+            yield chunk
+
+        # Save complete assistant response
+        assistant = assistant_service.get_by_name(db, "Look AI")
+
+        assistant_sender = {
+            "id": str(assistant.id),
+            "location": None
+        }
+
+        message_service.create(
+            db=db,
+            chat_id=chat.id,
+            sender=assistant_sender,
+            content=answer,
+            role=MessageRole.ASSISTANT.value
+        )
+
+        db.commit()
+
     def create(self, db: Session, chat_title: str) -> Chat:
         chat = Chat(title=chat_title)
         db.add(chat)

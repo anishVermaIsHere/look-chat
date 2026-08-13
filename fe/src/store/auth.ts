@@ -1,15 +1,17 @@
 import type { User } from "@/schemas/common"
 import { create } from "zustand"
-import { getSelf } from "@/services/apis/auth"
+import { getSelf } from "@/services/apis/user"
+import { logout } from "@/services/apis/auth"
+
 
 export type AuthStoreType = {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  isInitialized: boolean,
+  isInitialized: boolean;
   setUser: (user: User | null) => void;
-  logout: () => void;
-  init: () => Promise<void>
+  logOut: () => Promise<void>;
+  init: () => Promise<void>;
 };
 
 
@@ -19,7 +21,12 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
   isInitialized: false,
   isLoading: true,
   setUser: (user) => set({ user, isAuthenticated: user?.id ? true : false }),
-  logout: () => set({ user: null, isAuthenticated: false }),
+  logOut: async () => { 
+    const res = await logout();
+    if(res?.data?.success){
+      set({ user: null, isAuthenticated: false })
+    }
+  },
   init: async () => {
     if (get().isInitialized) return;
 
