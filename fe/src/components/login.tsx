@@ -27,7 +27,6 @@ export default function Login() {
       await new Promise((resolve) => setTimeout(resolve, 2000));
       const res = await login(data);
       if (res?.status === 200) {
-        toast.add({ type:"success", description: "Logged in successfully" });
         const user = res?.data?.user;
         setUser({
           ...user,

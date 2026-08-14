@@ -1,10 +1,53 @@
-# Look Chat - AI App
+# Look AI - Chat
+
+A full-stack AI chat application built with React and FastAPI.
+
+## Tech Stack
+
+| Folder | Description| Tech |  
+|--------|---------|---------|
+| `be/` | Backend | FastAPI, PostgreSQL, SQLAlchemy, JWT |
+| `fe/` | Frontend | React, TypeScript, ShadeCN, AI SDK React |
 
 
+### AI
 
-### Structure & Tech Stack
+- AI Provider
+- Streaming responses
 
-| Folder | Tech |  
-|--------|---------|
-| `be/` | FastAPI, PostgreSQL |
-| `fe/` | React, ShadeCN, Tailwind |
+## Features
+
+- User registration
+- User authentication
+- JWT-based authentication
+- Chat creation
+- Message sending
+- AI streaming responses
+- Markdown rendering
+- Reasoning/thinking messages
+- Auto-scrolling
+- Chat history
+- Logout
+- Responsive chat interface
+
+---
+
+## Architecture
+
+```text
+React Client
+     │
+     │ HTTP / Streaming
+     ▼
+FastAPI
+     │
+     ├── Authentication
+     ├── Chat Service
+     ├── Message Service
+     └── LLM Service
+              │
+              ▼
+        LLM Provider
+              │
+              ▼
+        Streaming Response

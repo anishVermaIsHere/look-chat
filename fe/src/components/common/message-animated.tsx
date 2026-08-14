@@ -3,8 +3,8 @@ import { BrainIcon } from "lucide-react"
 import { motion, useReducedMotion } from "motion/react"
 import type { MessageAnimationPreset } from "@/lib/message-animations"
 import { MESSAGE_ANIMATIONS } from "@/lib/message-animations"
-
-
+import MarkdownRenderer from "@/components/common/markdown-referer"
+import Typing from "@/widgets/typing"
 
 function Message({ align, children }: { align: "start" | "end"; children: React.ReactNode }) {
   return (
@@ -26,7 +26,7 @@ function Bubble({
   children: React.ReactNode 
 }) {
   const variantStyles = variant === "muted" 
-    ? "bg-[#1f1c2c] text-gray-100 rounded-2xl p-3.5" 
+    ? "bg-[#1f1c2c] text-gray-100 rounded-md p-3.5" 
     : "bg-transparent text-foreground p-1"
 
   return <div className={variantStyles}>{children}</div>
@@ -60,9 +60,10 @@ const MotionMessageScrollerItem = motion.create(MessageScrollerItem)
 function MessageAnimated({
   message,
   animationPreset = MESSAGE_ANIMATIONS["slide-up"],
-  assistantVariant = "ghost",
+  assistantVariant = "muted",
   scrollAnchor,
   userVariant = "muted",
+  status,
   ...props
 }: Omit<
   React.ComponentProps<typeof MotionMessageScrollerItem>,
@@ -72,6 +73,7 @@ function MessageAnimated({
   assistantVariant?: React.ComponentProps<typeof Bubble>["variant"]
   message: MessageAnimatedMessage
   userVariant?: React.ComponentProps<typeof Bubble>["variant"]
+  status: string
 }) {
   const shouldReduceMotion = useReducedMotion()
   const isUserMessage = message.role === "user"
@@ -91,6 +93,7 @@ function MessageAnimated({
           message={message}
           assistantVariant={assistantVariant}
           userVariant={userVariant}
+          status={status}
         />
       </MotionMessageScrollerItem>
     )
@@ -107,6 +110,7 @@ function MessageAnimated({
         message={message}
         assistantVariant={assistantVariant}
         userVariant={userVariant}
+        status={status}
       />
     </MotionMessageScrollerItem>
   )
@@ -116,10 +120,12 @@ function MessageAnimatedRow({
   message,
   assistantVariant,
   userVariant,
+  status
 }: {
   assistantVariant: React.ComponentProps<typeof Bubble>["variant"]
   message: MessageAnimatedMessage
   userVariant: React.ComponentProps<typeof Bubble>["variant"]
+  status: string
 }) {
   const isUserMessage = message.role === "user"
   const parts = getMessageAnimatedContentParts(message)
@@ -144,32 +150,25 @@ function MessageAnimatedRow({
                   Reasoning
                 </div>
                 <div className="space-y-1.5 text-sm">
-                  {paragraphs.map((paragraph, paragraphIndex) => (
-                    <p
-                      key={`${part.key}-${paragraphIndex}`}
-                      className="whitespace-pre-wrap"
-                    >
-                      {paragraph}
-                    </p>
+                  {paragraphs.map((paragraph) => (
+                      <MarkdownRenderer key={message.id} keyIndex={message.id} content={paragraph}/>
                   ))}
                 </div>
               </div>
             )
           }
 
+          const isGenerating = !isUserMessage && status === "streaming" && !part.text.trim()
+
           return (
             <Bubble
               key={part.key}
-              variant={isUserMessage ? userVariant : assistantVariant}
+              variant={message.role === "user" ? userVariant : assistantVariant}
             >
               <BubbleContent className="space-y-2">
-                {paragraphs.map((paragraph, paragraphIndex) => (
-                  <p
-                    key={`${part.key}-${paragraphIndex}`}
-                    className="whitespace-pre-wrap"
-                  >
-                    {paragraph}
-                  </p>
+                {isGenerating ? <Typing /> : ''}
+                {paragraphs.map((paragraph) => (
+                    <MarkdownRenderer key={message.id} keyIndex={message.id} content={paragraph} />
                 ))}
               </BubbleContent>
             </Bubble>

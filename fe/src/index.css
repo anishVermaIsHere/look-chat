@@ -2,6 +2,8 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "@fontsource-variable/inter";
+@plugin "@tailwindcss/typography";
+
 
 @custom-variant dark (&:is(.dark *));
 
@@ -135,4 +137,14 @@ body {
 
 .bg-main {
   background: linear-gradient(to bottom, #403c55, #1f1c2c);
+}
+
+
+ul li strong,
+ol li strong {
+  color: #a39bcc;
+}
+
+.markdown {
+  @apply p-2 prose-sm prose-img:rounded-lg prose-a:text-blue-600 prose-a:underline prose-a:underline-offset-4 prose-ul:list-disc prose-ol:list-decimal prose-h1:text-xl prose-h1:font-bold prose-h2:text-lg prose-h2:font-semibold cursor-text break-all text-wrap;
 }

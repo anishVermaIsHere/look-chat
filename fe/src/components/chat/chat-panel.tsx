@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, SyntheticEvent } from "react"
 import { useChat } from "@ai-sdk/react"
-import { TextStreamChatTransport  } from 'ai';
+import { TextStreamChatTransport  } from 'ai'
 import {
     ArrowUpIcon,
     GlobeIcon,
@@ -41,21 +41,16 @@ import {
     InputGroupAddon,
     InputGroupButton,
 } from "@/components/ui/input-group"
-import {
-    MessageScroller,
-    MessageScrollerButton,
-    MessageScrollerContent,
-    MessageScrollerProvider,
-    MessageScrollerViewport,
-} from "@/components/ui/message-scroller"
-import { ProfileMenu } from "./profile-menu"
+import { MessageScroller, MessageScrollerProvider } from "@/components/ui/message-scroller"
+import ChatMessages from "./chat-messages"
+import { ProfileMenu } from "../common/profile-menu"
 import { AppConfig } from "@/config/app-config"
 import { API_ENDPOINTS } from "@/services/apis/endpoints"
-import { getUserLocation } from "@/utils";
+import { getUserLocation } from "@/utils"
 
 
 export default function ChatPanel() {
-    const [input, setInput] = useState("");
+    const [input, setInput] = useState("Future of AI");
     const [location, setLocation] = useState({ latitude: 0.0, longitude: 0.0 });
     const { messages, sendMessage, status, setMessages } = useChat({
         transport: new TextStreamChatTransport({
@@ -89,20 +84,17 @@ export default function ChatPanel() {
             },
         }),
     });
-    
+
     const isBusy = status === "submitted" || status === "streaming"
 
     const resetChat = () => setMessages([]);
 
-    const submitMessage = (e) => {
+    const submitMessage = (e: SyntheticEvent) => {
         e.preventDefault();
-        if (!input.trim() || isBusy) {
-            return
-        }
+        if (!input.trim() || isBusy) return
         sendMessage({ text: input });
         setInput("");
     }
-
 
     useEffect(() => {
         async function getUserCurrentLocation() {
@@ -120,7 +112,7 @@ export default function ChatPanel() {
     }, []);
 
     return (
-        <MessageScrollerProvider>
+        <MessageScrollerProvider defaultScrollPosition="last-anchor">
             <div className="relative w-full flex flex-col items-center gap-4">
                 <Card className="mx-auto h-screen w-full gap-0 pt-0 bg-main">
                     <CardHeader className="pt-2 pb-2 px-4 gap-1 border-b bg-[#1f1c2c]">
@@ -155,21 +147,7 @@ export default function ChatPanel() {
                             </Empty>
                         ) : (
                             <MessageScroller>
-                                <MessageScrollerViewport>
-                                    <MessageScrollerContent
-                                        aria-busy={isBusy}
-                                        className="p-(--card-spacing)"
-                                    >
-                                        {messages.map((message) => (
-                                            <MessageAnimated
-                                                key={message.id}
-                                                message={message}
-                                                scrollAnchor={message.role === "user"}
-                                            />
-                                        ))}
-                                    </MessageScrollerContent>
-                                </MessageScrollerViewport>
-                                <MessageScrollerButton />
+                                <ChatMessages messages={messages} isBusy={isBusy} status={status}/>
                             </MessageScroller>
                         )}
                     </CardContent>
