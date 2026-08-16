@@ -6,7 +6,7 @@ const { AUTH } = API_ENDPOINTS;
 
 async function login(credentials: LoginSchema) {
   try {
-    return await axiosInstance.post(AUTH.LOGIN, credentials, { withCredentials: true });
+    return await axiosInstance.post(AUTH.login(), credentials, { withCredentials: true });
   } catch (error) {
     console.log("ERROR", error)
   }
@@ -14,7 +14,7 @@ async function login(credentials: LoginSchema) {
 
 async function logout(){
   try {
-    return await axiosInstance.post(AUTH.LOGOUT, {}, { withCredentials: true });
+    return await axiosInstance.post(AUTH.logout(), {}, { withCredentials: true });
   } catch (error) {
     console.log("ERROR", error)
   }

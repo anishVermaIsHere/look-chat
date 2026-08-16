@@ -36,6 +36,7 @@ import {
     EmptyMedia,
     EmptyTitle,
 } from "@/components/ui/empty"
+import { SidebarTrigger } from "../ui/sidebar"
 import {
     InputGroup,
     InputGroupAddon,
@@ -50,11 +51,11 @@ import { getUserLocation } from "@/utils"
 
 
 export default function ChatPanel() {
-    const [input, setInput] = useState("Future of AI");
+    const [input, setInput] = useState("");
     const [location, setLocation] = useState({ latitude: 0.0, longitude: 0.0 });
     const { messages, sendMessage, status, setMessages } = useChat({
         transport: new TextStreamChatTransport({
-            api: `${AppConfig.baseUrl}/api/v1${API_ENDPOINTS.CHAT.SEND_MESSAGE}`,
+            api: `${AppConfig.baseUrl}/api/v1${API_ENDPOINTS.CHAT.sendMessage()}`,
             credentials: "include",
             fetch: async (url, options) => {
                 return fetch(url, {
@@ -114,10 +115,12 @@ export default function ChatPanel() {
     return (
         <MessageScrollerProvider defaultScrollPosition="last-anchor">
             <div className="relative w-full flex flex-col items-center gap-4">
-                <Card className="mx-auto h-screen w-full gap-0 pt-0 bg-main">
-                    <CardHeader className="pt-2 pb-2 px-4 gap-1 border-b bg-[#1f1c2c]">
-                        <CardTitle>Look</CardTitle>
-                        <CardDescription>AI Assistant</CardDescription>
+                <Card className="mx-auto h-screen w-full gap-0 pt-0 rounded-none bg-main">
+                    <CardHeader className="pt-2 pb-2 px-4 gap-1 border-b rounded-none bg-[#1f1c2c]">
+                        <div className="flex items-center">
+                            <SidebarTrigger />
+                            <CardTitle>Look AI</CardTitle>
+                        </div>
                         <CardAction className="flex gap-4">
                             <Button
                                 variant="outline"

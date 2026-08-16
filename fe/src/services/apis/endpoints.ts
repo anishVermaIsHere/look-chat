@@ -5,16 +5,19 @@ const USER_BASE = "/users";
 
 export const API_ENDPOINTS = {
   AUTH: {
-    BASE: AUTH_BASE,
-    REGISTER: `${AUTH_BASE}/register`,
-    LOGIN: `${AUTH_BASE}/login`,
-    LOGOUT: `${AUTH_BASE}/logout`
+    base: AUTH_BASE,
+    register: () => `${AUTH_BASE}/register`,
+    login: () => `${AUTH_BASE}/login`,
+    logout: () => `${AUTH_BASE}/logout`
   },
   USER: {
-    PROFILE: `${USER_BASE}/profile`
+    base: USER_BASE,
+    profile: () => `${USER_BASE}/profile`,
+    chats: (userId: string)=> `${USER_BASE}/${userId}/chats`
   },
   CHAT: {
-    BASE: CHAT_BASE,
-    SEND_MESSAGE: `${CHAT_BASE}`,
+    base: CHAT_BASE,
+    sendMessage: () => CHAT_BASE,
+    deleteChat: (chatId: string) => `${CHAT_BASE}/${chatId}`
   },
 };
