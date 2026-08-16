@@ -1,7 +1,8 @@
-from fastapi import Request, HTTPException
+import uuid
+
+from fastapi import Request, HTTPException, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
-import uuid
 
 from app.database.models.chat import Chat
 from app.database.models.message import MessageRole
@@ -14,7 +15,7 @@ from app.utils.chat import generate_chat_title, convert_messages
 
 
 class ChatService:
-    def send_message(self, db: Session, payload: MessagePayload):
+    def send_message(self, user_id: uuid.UUID, db: Session, payload: MessagePayload):
         # 1. Find existing chat
         chat = None
 
@@ -31,7 +32,7 @@ class ChatService:
         # 2. Create chat if this is a new conversation
         if chat is None:
             chat_title = generate_chat_title(content)
-            chat = self.create(db, chat_title)
+            chat = self.create(user_id, db, chat_title)
 
         message_service = MessageService()
         # 3. Save user's message
@@ -75,7 +76,7 @@ class ChatService:
             ]
         }
 
-    def stream_message(self, db: Session, payload: MessagePayload):
+    def stream_message(self, user_id: uuid.UUID, db: Session, payload: MessagePayload):
 
         chat = None
 
@@ -90,7 +91,7 @@ class ChatService:
 
         if chat is None:
             chat_title = generate_chat_title(payload.content)
-            chat = self.create(db, chat_title)
+            chat = self.create(user_id, db, chat_title)
 
         message_service = MessageService()
 
@@ -142,8 +143,8 @@ class ChatService:
 
         db.commit()
 
-    def create(self, db: Session, chat_title: str) -> Chat:
-        chat = Chat(title=chat_title)
+    def create(self, user_id: uuid.UUID, db: Session, chat_title: str) -> Chat:
+        chat = Chat(title=chat_title, user_id=user_id)
         db.add(chat)
         db.flush()
 
@@ -151,3 +152,17 @@ class ChatService:
 
     def get_by_id(self, chat_id: uuid.UUID, db: Session) -> Chat | None:
         return (db.query(Chat).filter(Chat.id == chat_id).first())
+
+    def get_by_user_id(self, user_id: uuid.UUID, db: Session):
+        return (db.query(Chat).filter(Chat.user_id == user_id).order_by(Chat.created_at.desc()).all())
+
+    def delete_by_id(self, chat_id: uuid.UUID, db: Session):
+        delete_chat = (db.query(Chat).filter(Chat.id == chat_id).first())
+        # deleted_chat = db.query(models.Item).filter(models.Item.id == item_id).delete(synchronize_session=False) # alternative way
+
+        if delete_chat is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Chat with id {chat_id} not found")
+        db.delete(delete_chat)
+        db.commit()
+
+        return { "success": True }

@@ -1,10 +1,12 @@
+import uuid
+
 from fastapi import APIRouter, Request, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from app.database.database import get_db
 from app.schemas.chat import MessagePayload
-from app.controllers.chat import create_message
+from app.controllers.chat import create_message, delete_chat
 
 router = APIRouter(prefix="/chat", tags=["Chat"])
 
@@ -32,3 +34,7 @@ def chat(req: Request, payload: MessagePayload, db: Session = Depends(get_db)):
     """
     data = create_message(payload, db, req)
     return data
+
+@router.delete("/{chat_id}", response_class=JSONResponse, summary="Chat delete", description="Accepts chat_id and pass it to controller")
+def chat_delete(chat_id: uuid.UUID, db: Session = Depends(get_db)):
+    return delete_chat(chat_id, db)

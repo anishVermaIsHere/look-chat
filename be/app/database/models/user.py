@@ -1,6 +1,7 @@
 import uuid
 
 from sqlalchemy.dialects.postgresql import JSONB, UUID
+from sqlalchemy.orm import relationship
 
 from app.database.database import Base
 from sqlalchemy import Column, String, TIMESTAMP, text
@@ -17,4 +18,5 @@ class User(Base):
     email = Column(String, unique=True, nullable=False)
     password = Column(String, nullable=False)
     contact = Column(JSONB, nullable=False, server_default=text("'{}'::jsonb"))
+    chats = relationship("Chat", back_populates="user", cascade="all, delete-orphan")
     created_at = Column(TIMESTAMP(timezone=True), server_default=text('now()'))
