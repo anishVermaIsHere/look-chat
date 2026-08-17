@@ -48,10 +48,12 @@ import { ProfileMenu } from "../common/profile-menu"
 import { AppConfig } from "@/config/app-config"
 import { API_ENDPOINTS } from "@/services/apis/endpoints"
 import { getUserLocation } from "@/utils"
+import { useQueryClient } from "@tanstack/react-query"
 
 
 export default function ChatPanel() {
-    const [input, setInput] = useState("");
+    const queryClient = useQueryClient();
+    const [input, setInput] = useState("Whats on your mind");
     const [location, setLocation] = useState({ latitude: 0.0, longitude: 0.0 });
     const { messages, sendMessage, status, setMessages } = useChat({
         transport: new TextStreamChatTransport({
@@ -64,7 +66,7 @@ export default function ChatPanel() {
                     credentials: "include",
                 });
             },
-            prepareSendMessagesRequest: ({ messages }) => {
+            prepareSendMessagesRequest: async ({ messages }) => {
                 const lastMessage = messages[messages.length - 1];
                 const textPart = lastMessage?.parts.find(
                     (part) => part.type === "text"
@@ -78,7 +80,6 @@ export default function ChatPanel() {
                         longitude: location.longitude,
                         },
                     },
-
                     content: textPart?.text ?? "",
                     },
                 };
@@ -90,12 +91,17 @@ export default function ChatPanel() {
 
     const resetChat = () => setMessages([]);
 
-    const submitMessage = (e: SyntheticEvent) => {
+    const submitMessage = async (e: SyntheticEvent) => {
         e.preventDefault();
         if (!input.trim() || isBusy) return
         sendMessage({ text: input });
         setInput("");
+        await queryClient.invalidateQueries({
+            queryKey: ["chats"],
+        });
     }
+
+
 
     useEffect(() => {
         async function getUserCurrentLocation() {

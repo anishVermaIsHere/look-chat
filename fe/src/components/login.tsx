@@ -24,7 +24,6 @@ export default function Login() {
 
   async function onSubmit(data: LoginSchema){
     try {
-      await new Promise((resolve) => setTimeout(resolve, 2000));
       const res = await login(data);
       if (res?.status === 200) {
         const user = res?.data?.user;

@@ -12,24 +12,23 @@ import {
 import useAuthStore from "@/store/auth"
 import { getUserChats } from "@/services/apis/user"
 import { deleteChat } from "@/services/apis/chat"
+import { useQuery } from "@tanstack/react-query"
+import Spinner from "@/widgets/spinner"
+import ChatOptions from "@/components/chat/chat-option"
 
 export default function AppSidebar() {
   const { user } = useAuthStore(s=>s);
-  const [ chats, setChats ] = useState([])
 
+  const { isPending, data } = useQuery({
+    queryKey: ['chats'],
+    queryFn: async () => await getUserChats(user?.id)
+  });
 
-  // async function removeChat(chatId: string){
-  //   await deleteChat(chatId);
-  // }
+  const chats = data?.data || [];
 
-  useEffect(()=>{
-    async function getChats(){
-      const res = await getUserChats(user?.id);
-      setChats(res?.data || []);
-      console.log(res)
-    }
-    getChats();
-  },[]);
+  if(isPending){
+    return <Spinner />
+  }
 
   return (
     <Sidebar>
@@ -38,10 +37,11 @@ export default function AppSidebar() {
       </SidebarHeader>
       <SidebarContent className="px-2">
         <SidebarMenu>
-          {chats.map((ch) => (
+          {chats?.map((ch) => (
             <SidebarMenuItem key={ch?.id}>
-              <SidebarMenuButton className="font-light">
+              <SidebarMenuButton className="font-light flex justify-between" onClick={async () => deleteChat(ch?.id)}>
                 <span>{ch?.title}</span>
+                <ChatOptions />
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
