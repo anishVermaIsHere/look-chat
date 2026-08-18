@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import { ErrorBoundary, useErrorBoundary } from "react-error-boundary";
-import { AlertCircleIcon } from "lucide-react"
+import { Icons } from "@/widgets/icons"
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@base-ui/react";
 
@@ -16,7 +16,7 @@ export function ErrorSection() {
     // </Box>
     <div className="h-screen p-5">
      <Alert variant="destructive" className="max-w-md">
-      <AlertCircleIcon />
+      <Icons.alertCircle />
       <AlertTitle>☹️ <br/>Oops!</AlertTitle>
       <AlertDescription>
         Something went wrong!

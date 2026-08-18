@@ -51,3 +51,14 @@ FastAPI
               │
               ▼
         Streaming Response
+
+
+
+
+```
+
+### Screens
+
+![New Chat](./chat-panel-screen-2.png)
+
+![Conversations](./chat-panel-screen.png)

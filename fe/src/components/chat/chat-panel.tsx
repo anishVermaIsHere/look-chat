@@ -1,17 +1,6 @@
-import { useEffect, useState, SyntheticEvent } from "react"
-import { useChat } from "@ai-sdk/react"
-import { TextStreamChatTransport  } from 'ai'
-import {
-    ArrowUpIcon,
-    GlobeIcon,
-    ImageIcon,
-    MessageCircleDashedIcon,
-    PaperclipIcon,
-    PlusIcon,
-    RotateCwIcon,
-    TelescopeIcon,
-} from "lucide-react"
-import { MessageAnimated } from "@/components/common/message-animated"
+import { useEffect, useRef, useContext } from "react"
+import type { SyntheticEvent } from "react"
+import { Icons } from "@/widgets/icons"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -45,47 +34,15 @@ import {
 import { MessageScroller, MessageScrollerProvider } from "@/components/ui/message-scroller"
 import ChatMessages from "./chat-messages"
 import { ProfileMenu } from "../common/profile-menu"
-import { AppConfig } from "@/config/app-config"
-import { API_ENDPOINTS } from "@/services/apis/endpoints"
-import { getUserLocation } from "@/utils"
 import { useQueryClient } from "@tanstack/react-query"
+import { ChatContext } from "@/context/chat-context"
+import BubbleAnimation from "./animation"
 
 
 export default function ChatPanel() {
     const queryClient = useQueryClient();
-    const [input, setInput] = useState("Whats on your mind");
-    const [location, setLocation] = useState({ latitude: 0.0, longitude: 0.0 });
-    const { messages, sendMessage, status, setMessages } = useChat({
-        transport: new TextStreamChatTransport({
-            api: `${AppConfig.baseUrl}/api/v1${API_ENDPOINTS.CHAT.sendMessage()}`,
-            credentials: "include",
-            fetch: async (url, options) => {
-                return fetch(url, {
-                    ...options,
-                    method: "POST",
-                    credentials: "include",
-                });
-            },
-            prepareSendMessagesRequest: async ({ messages }) => {
-                const lastMessage = messages[messages.length - 1];
-                const textPart = lastMessage?.parts.find(
-                    (part) => part.type === "text"
-                );
-                return {
-                    body: {
-                    sender: {
-                        id: "user-id",
-                        location: {
-                        latitude: location.latitude,
-                        longitude: location.longitude,
-                        },
-                    },
-                    content: textPart?.text ?? "",
-                    },
-                };
-            },
-        }),
-    });
+    const hasSentMessage = useRef(false);
+    const { chat: { messages, sendMessage, status, setMessages }, input, setInput } = useContext(ChatContext);
 
     const isBusy = status === "submitted" || status === "streaming"
 
@@ -94,29 +51,19 @@ export default function ChatPanel() {
     const submitMessage = async (e: SyntheticEvent) => {
         e.preventDefault();
         if (!input.trim() || isBusy) return
+        hasSentMessage.current = true;
         sendMessage({ text: input });
         setInput("");
-        await queryClient.invalidateQueries({
-            queryKey: ["chats"],
-        });
     }
 
-
-
     useEffect(() => {
-        async function getUserCurrentLocation() {
-            try {
-                const location = await getUserLocation();
-                setLocation({
-                    longitude: location?.longitude,
-                    latitude: location?.latitude
-                });
-            } catch (error) {
-                console.error("Failed to get location:", error);
-            }
+        if (status === "ready" && hasSentMessage.current) {
+            hasSentMessage.current = false;
+            queryClient.invalidateQueries({
+                queryKey: ["chats"],
+            });
         }
-        getUserCurrentLocation();
-    }, []);
+    }, [status, queryClient]);
 
     return (
         <MessageScrollerProvider defaultScrollPosition="last-anchor">
@@ -131,22 +78,23 @@ export default function ChatPanel() {
                             <Button
                                 variant="outline"
                                 size="icon"
-                                aria-label="Reset conversation"
+                                aria-label="New chat"
                                 onClick={resetChat}
                                 isDisabled={isBusy}
                                 className="w-20 flex gap-2"
                             >
-                                <RotateCwIcon /> Reset
+                                <Icons.plus /> Chat
                             </Button>
                             <ProfileMenu />
                         </CardAction>
                     </CardHeader>
                     <CardContent className="flex-1 w-full overflow-hidden p-0">
                         {!messages.length ? (
-                            <Empty className="h-full">
+                            <Empty className="h-full relative">
+                                <BubbleAnimation density={0.00015} minRadius={0.5} maxRadius={8} twinkleSpeed={0.05} />
                                 <EmptyHeader>
                                     <EmptyMedia variant="icon">
-                                        <MessageCircleDashedIcon />
+                                        <Icons.messageCircle />
                                     </EmptyMedia>
                                     <EmptyTitle>Hi! I am Look, your AI Assistant</EmptyTitle>
                                     <EmptyDescription>
@@ -155,7 +103,8 @@ export default function ChatPanel() {
                                 </EmptyHeader>
                             </Empty>
                         ) : (
-                            <MessageScroller>
+                            <MessageScroller className="relative">
+                                <BubbleAnimation density={0.00015} minRadius={0.5} maxRadius={8} twinkleSpeed={0.05} />
                                 <ChatMessages messages={messages} isBusy={isBusy} status={status}/>
                             </MessageScroller>
                         )}
@@ -204,7 +153,7 @@ export default function ChatPanel() {
                                                 size="icon-sm"
                                                 variant="outline"
                                             >
-                                                <PlusIcon />
+                                                <Icons.plus />
                                             </InputGroupButton>
                                         </DropdownMenuTrigger>
 
@@ -236,7 +185,7 @@ export default function ChatPanel() {
                                         isDisabled={!input.trim() || isBusy}
                                         className="ml-auto"
                                     >
-                                        <ArrowUpIcon />
+                                        <Icons.arrowUp />
                                         <span className="sr-only">Send</span>
                                     </InputGroupButton>
                                 </InputGroupAddon>

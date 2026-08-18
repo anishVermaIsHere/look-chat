@@ -1,5 +1,3 @@
-import { Button } from "@/components/ui/button"
-import { Ellipsis } from "lucide-react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,25 +12,26 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import type { ChatData, ChatOption } from "@/types/chat"
+import { Icons } from "@/widgets/icons"
 
-export default function ChatOptions() {
+
+
+export default function ChatOptions({ chatData, menu }:{ chatData: ChatData, menu: ChatOption[]}) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<Ellipsis />} />
+      <DropdownMenuTrigger render={<Icons.ellipsis />} />
       <DropdownMenuContent className="w-40" align="start">
-        <DropdownMenuGroup>
-          <DropdownMenuItem>
-            Edit
-            <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
-        <DropdownMenuSeparator />
-        <DropdownMenuGroup>
-          <DropdownMenuItem >
-            Delete
-            <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
-          </DropdownMenuItem>
-        </DropdownMenuGroup>
+        {menu?.map((m: ChatOption)=>{
+          const Icon = m.icon
+          return  <DropdownMenuGroup key={m.label}>
+              <DropdownMenuItem onClick={()=>m.handler(chatData?.id)}>
+                <span>{<Icon />}</span>
+                {m.label}
+                <DropdownMenuShortcut></DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </DropdownMenuGroup>
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   )

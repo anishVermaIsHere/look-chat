@@ -18,24 +18,18 @@ def get_user_chats(user_id: str, db: Session):
 
 def create_message(payload: MessagePayload, db: Session, req: Request):
     user_id = req.state.user["sub"]
-    payload = payload.model_copy(
-        update={
-            "sender": payload.sender.model_copy(
-                update={
-                    "id": user_id
-                }
-            )
-        }
-    )
-    # response = chat_service.send_message(db, payload)
-
-    # return JSONResponse(content=jsonable_encoder(response))
+    chat = chat_service.get_or_create_chat(user_id, db, payload)
 
     def generate_message():
-            for chunk in chat_service.stream_message(user_id, db, payload):
-                yield chunk
+        res = chat_service.stream_message(user_id, chat.id, db, payload)
+        for chunk in res:
+            yield chunk
 
-    return StreamingResponse(generate_message(), media_type="text/event-stream")
+    response = StreamingResponse(generate_message(), media_type="text/event-stream")
+    response.headers["x-chat-id"] = str(chat.id)
+    response.headers["Access-Control-Expose-Headers"] = "x-chat-id"
+
+    return response
 
 
 def delete_chat(chat_id: uuid.UUID, db: Session):

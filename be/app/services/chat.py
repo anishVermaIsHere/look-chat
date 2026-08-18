@@ -76,29 +76,13 @@ class ChatService:
             ]
         }
 
-    def stream_message(self, user_id: uuid.UUID, db: Session, payload: MessagePayload):
-
-        chat = None
-
-        if payload.chat_id:
-            chat = self.get_by_id(payload.chat_id, db)
-
-            if not chat:
-                raise HTTPException(
-                    status_code=404,
-                    detail="Chat not found"
-                )
-
-        if chat is None:
-            chat_title = generate_chat_title(payload.content)
-            chat = self.create(user_id, db, chat_title)
-
+    def stream_message(self, user_id: uuid.UUID, chat_id: uuid.UUID, db: Session, payload: MessagePayload):
         message_service = MessageService()
 
         # Save user message
         message_service.create(
             db=db,
-            chat_id=chat.id,
+            chat_id=chat_id,
             sender=payload.sender.model_dump(mode="json"),
             content=payload.content,
             role=MessageRole.USER.value
@@ -135,13 +119,24 @@ class ChatService:
 
         message_service.create(
             db=db,
-            chat_id=chat.id,
+            chat_id=chat_id,
             sender=assistant_sender,
             content=answer,
             role=MessageRole.ASSISTANT.value
         )
 
         db.commit()
+
+
+    def get_or_create_chat(self, user_id: uuid.UUID, db: Session, payload: MessagePayload) -> Chat:
+        if payload.chat_id:
+            chat = self.get_by_id(payload.chat_id, db)
+            if not chat:
+                raise HTTPException(status_code=404, detail="Chat not found")
+            return chat
+        
+        chat_title = generate_chat_title(payload.content)
+        return self.create(user_id, db, chat_title)
 
     def create(self, user_id: uuid.UUID, db: Session, chat_title: str) -> Chat:
         chat = Chat(title=chat_title, user_id=user_id)

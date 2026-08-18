@@ -1,10 +1,4 @@
-import {
-  CreditCardIcon,
-  LogOutIcon,
-  SettingsIcon,
-  UserIcon,
-  ChevronDown
-} from "lucide-react"
+import { Icons } from "@/widgets/icons";
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -22,21 +16,8 @@ export function ProfileMenu() {
     <DropdownMenu>
       <DropdownMenuTrigger render={<Button variant="outline" className="rounded-full">{user?.firstName.slice(0,1)}</Button>} />
       <DropdownMenuContent>
-        {/* <DropdownMenuItem>
-          <UserIcon />
-          Profile
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <CreditCardIcon />
-          Billing
-        </DropdownMenuItem>
-        <DropdownMenuItem>
-          <SettingsIcon />
-          Settings
-        </DropdownMenuItem>
-        <DropdownMenuSeparator /> */}
         <DropdownMenuItem variant="destructive" onClick={logOut}>
-          <LogOutIcon />
+          <Icons.logout />
           Log out
         </DropdownMenuItem>
       </DropdownMenuContent>

@@ -1,5 +1,5 @@
 import * as React from "react"
-import { BrainIcon } from "lucide-react"
+import { Icons } from "@/widgets/icons"
 import { motion, useReducedMotion } from "motion/react"
 import type { MessageAnimationPreset } from "@/lib/message-animations"
 import { MESSAGE_ANIMATIONS } from "@/lib/message-animations"
@@ -130,6 +130,14 @@ function MessageAnimatedRow({
   const isUserMessage = message.role === "user"
   const parts = getMessageAnimatedContentParts(message)
 
+  const handleCopyResponse = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch(error){
+      console.log("ERROR: while copying text", error);
+    }
+  } 
+
   return (
     <Message align={isUserMessage ? "end" : "start"}>
       <MessageContent>
@@ -146,7 +154,7 @@ function MessageAnimatedRow({
                 className="w-full border-l-2 border-muted-foreground/30 pl-3 text-muted-foreground"
               >
                 <div className="mb-1 flex items-center gap-1.5 text-xs font-medium">
-                  <BrainIcon className="size-3.5" />
+                  <Icons.brain className="size-3.5" />
                   Reasoning
                 </div>
                 <div className="space-y-1.5 text-sm">
@@ -171,6 +179,14 @@ function MessageAnimatedRow({
                     <MarkdownRenderer key={message.id} keyIndex={message.id} content={paragraph} />
                 ))}
               </BubbleContent>
+              {status === "ready" && message.role == "assistant" && <div className="flex justify-end gap-3 mt-6">
+                <button className="border-none" onClick={()=>handleCopyResponse(paragraphs.join("\n\n"))} title="Copy">
+                  <Icons.copy className="size-5 cursor-pointer" />
+                </button>
+                <button className="border-none" title="Share">
+                  <Icons.share className="size-5 cursor-pointer" />
+                </button>
+                </div>}
             </Bubble>
           )
         })}
