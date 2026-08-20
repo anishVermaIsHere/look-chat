@@ -1,3 +1,4 @@
+import type { MouseEvent } from "react"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,12 +21,12 @@ import { Icons } from "@/widgets/icons"
 export default function ChatOptions({ chatData, menu }:{ chatData: ChatData, menu: ChatOption[]}) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<Icons.ellipsis />} />
+      <DropdownMenuTrigger render={<Icons.ellipsis />} onClick={(e: MouseEvent)=>e.stopPropagation()}/>
       <DropdownMenuContent className="w-40" align="start">
         {menu?.map((m: ChatOption)=>{
           const Icon = m.icon
           return  <DropdownMenuGroup key={m.label}>
-              <DropdownMenuItem onClick={()=>m.handler(chatData?.id)}>
+              <DropdownMenuItem onClick={(e)=>m.handler(e, chatData?.id)}>
                 <span>{<Icon />}</span>
                 {m.label}
                 <DropdownMenuShortcut></DropdownMenuShortcut>

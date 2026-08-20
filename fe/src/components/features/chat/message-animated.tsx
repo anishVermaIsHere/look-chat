@@ -5,6 +5,10 @@ import type { MessageAnimationPreset } from "@/lib/message-animations"
 import { MESSAGE_ANIMATIONS } from "@/lib/message-animations"
 import MarkdownRenderer from "@/components/common/markdown-referer"
 import Typing from "@/widgets/typing"
+import BrandLogo from "@/widgets/logo"
+import { AppConfig } from "@/config/app-config"
+import { toast } from "@/components/ui/toast"
+
 
 function Message({ align, children }: { align: "start" | "end"; children: React.ReactNode }) {
   return (
@@ -15,7 +19,7 @@ function Message({ align, children }: { align: "start" | "end"; children: React.
 }
 
 function MessageContent({ children }: { children: React.ReactNode }) {
-  return <div className="flex max-w-[80%] flex-col gap-2">{children}</div>
+  return <div className="flex max-w-[95%] sm:max-w-[80%] flex-col gap-2">{children}</div>
 }
 
 function Bubble({ 
@@ -133,6 +137,7 @@ function MessageAnimatedRow({
   const handleCopyResponse = async (text: string) => {
     try {
       await navigator.clipboard.writeText(text);
+      toast.add({ title: "Text copied!", type: "success"})
     } catch(error){
       console.log("ERROR: while copying text", error);
     }
@@ -169,10 +174,13 @@ function MessageAnimatedRow({
           const isGenerating = !isUserMessage && status === "streaming" && !part.text.trim()
 
           return (
+            <div className="flex items-start gap-2">
+              {message.role === "assistant" && <BrandLogo />}
             <Bubble
               key={part.key}
               variant={message.role === "user" ? userVariant : assistantVariant}
             >
+              
               <BubbleContent className="space-y-2">
                 {isGenerating ? <Typing /> : ''}
                 {paragraphs.map((paragraph) => (
@@ -188,6 +196,7 @@ function MessageAnimatedRow({
                 </button>
                 </div>}
             </Bubble>
+            </div>
           )
         })}
       </MessageContent>

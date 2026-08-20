@@ -1,9 +1,10 @@
 import { useContext } from "react"
+import type { MouseEvent } from "react"
 import { ChatContext } from "@/context/chat-context"
 import { Icons } from "@/widgets/icons"
 import { useQueryClient } from "@tanstack/react-query"
 import { deleteChat } from "@/services/apis/chat"
-import type { ChatOption } from "@/types/chat";
+import type { ChatOption } from "@/types/chat"
 
 
 
@@ -14,13 +15,16 @@ export default function useChatBubbleMenu(){
   return [
     {
       label: "Rename",
-      handler: (chatId: string) => {},
+      handler: (e: MouseEvent, chatId: string) => {
+        e.stopPropagation();
+      },
       icon: Icons.pencil,
       type: "button",
     },
     {
       label: "Delete",
-      handler: async (chatId: string) => {
+      handler: async (e: MouseEvent, chatId: string) => {
+        e.stopPropagation();
         const res = await deleteChat(chatId);
         if (res?.data?.success) {
           await queryClient.invalidateQueries({

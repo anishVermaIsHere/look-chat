@@ -6,9 +6,9 @@ from sqlalchemy.orm import Session
 
 from app.database.database import get_db
 from app.schemas.chat import MessagePayload
-from app.controllers.chat import create_message, delete_chat
+from app.controllers.chat import create_message, delete_chat, get_chat
 
-router = APIRouter(prefix="/chat", tags=["Chat"])
+router = APIRouter(prefix="/chats", tags=["Chat"])
 
 
 @router.get("")
@@ -38,3 +38,7 @@ def chat(req: Request, payload: MessagePayload, db: Session = Depends(get_db)):
 @router.delete("/{chat_id}", response_class=JSONResponse, summary="Chat delete", description="Accepts chat_id and pass it to controller")
 def chat_delete(chat_id: uuid.UUID, db: Session = Depends(get_db)):
     return delete_chat(chat_id, db)
+
+@router.get("/{chat_id}", response_class=JSONResponse, summary="Chat fetch", description="Accepts chat_id and pass it to controller to fetch chat")
+def chat_fetch(chat_id: uuid.UUID, db: Session = Depends(get_db)):
+    return get_chat(chat_id, db)

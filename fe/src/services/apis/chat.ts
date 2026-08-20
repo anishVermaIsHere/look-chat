@@ -20,7 +20,17 @@ async function deleteChat(chatId: string){
   }
 }
 
+async function getChat(chatId: string){
+  try {
+    return await axiosInstance.get(CHAT.getChat(chatId), { withCredentials: true })
+  } catch (error) {
+    console.log("ERROR", error);
+  }
+}
+
+
 export {
   sendMessage,
-  deleteChat
+  deleteChat,
+  getChat
 }

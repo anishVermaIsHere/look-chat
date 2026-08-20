@@ -9,6 +9,8 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "./ui/field"
 import { Input } from "./ui/input"
 import { login } from "@/services/apis/auth"
 import { useNavigate } from "react-router-dom"
+import BrandLogo from "@/widgets/logo"
+import BubbleAnimation from "@/components/features/chat/animation"
 
 
 export default function Login() {
@@ -43,10 +45,11 @@ export default function Login() {
 
   return (
     <section className="flex flex-col justify-center items-center min-h-screen">
+       <BubbleAnimation density={0.00015} minRadius={0.5} maxRadius={8} twinkleSpeed={0.05} />
         <div className="flex flex-col items-center justify-center space-y-12 sm:shadow-xl sm:rounded-2xl px-6 py-10 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 bg-main">
           <div className="flex flex-col items-center mb-5">
             {/* <CommonAvatar /> */}
-            <p className="text-xl text-gray-100">Look AI</p>
+            <p className="text-xl text-gray-100"><BrandLogo /> {AppConfig.appName}</p>
             {/* <FormDescription>Login into your account</FormDescription> */}
           </div>
           <form

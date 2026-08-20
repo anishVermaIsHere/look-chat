@@ -12,7 +12,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     const [input, setInput] = useState<string>("");
     const [chatId, setChatId] = useState<string>("");
     // const chatIdRef = useRef<string | null>(null);
-    const [location, setLocation] = useState({ latitude: 0.0, longitude: 0.0 });
+    const [location, setLocation] = useState(null);
     const chat = useChat({
             transport: new TextStreamChatTransport({
               api: `${AppConfig.baseUrl}/api/v1${API_ENDPOINTS.CHAT.sendMessage()}`,
@@ -40,8 +40,8 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
                       sender: {
                           id: genUUID(),
                           location: {
-                            latitude: location.latitude,
-                            longitude: location.longitude
+                            latitude: location?.latitude,
+                            longitude: location?.longitude
                           },
                       },
                       content: textPart?.text ?? "",
@@ -67,7 +67,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
   return (
-    <ChatContext.Provider value={{ chat, input, setInput }}>
+    <ChatContext.Provider value={{ chat, input, setInput, chatId, setChatId }}>
       {children}
     </ChatContext.Provider>
   );

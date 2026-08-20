@@ -1,6 +1,6 @@
 import { useEffect, useRef, useContext } from "react"
 import type { SyntheticEvent } from "react"
-import { Icons } from "@/widgets/icons"
+import { Icons, AssortedIcons } from "@/widgets/icons"
 import { Button } from "@/components/ui/button"
 import {
     Card,
@@ -25,7 +25,7 @@ import {
     EmptyMedia,
     EmptyTitle,
 } from "@/components/ui/empty"
-import { SidebarTrigger } from "../ui/sidebar"
+import { SidebarTrigger } from "../../ui/sidebar"
 import {
     InputGroup,
     InputGroupAddon,
@@ -33,10 +33,12 @@ import {
 } from "@/components/ui/input-group"
 import { MessageScroller, MessageScrollerProvider } from "@/components/ui/message-scroller"
 import ChatMessages from "./chat-messages"
-import { ProfileMenu } from "../common/profile-menu"
+import { ProfileMenu } from "../../common/profile-menu"
 import { useQueryClient } from "@tanstack/react-query"
 import { ChatContext } from "@/context/chat-context"
 import BubbleAnimation from "./animation"
+import { AppConfig } from "@/config/app-config"
+import BrandLogo from "@/widgets/logo"
 
 
 export default function ChatPanel() {
@@ -72,7 +74,7 @@ export default function ChatPanel() {
                     <CardHeader className="pt-2 pb-2 px-4 gap-1 border-b rounded-none bg-[#1f1c2c]">
                         <div className="flex items-center">
                             <SidebarTrigger />
-                            <CardTitle>Look AI</CardTitle>
+                            <CardTitle>{AppConfig.appName}</CardTitle>
                         </div>
                         <CardAction className="flex gap-4">
                             <Button
@@ -93,9 +95,7 @@ export default function ChatPanel() {
                             <Empty className="h-full relative">
                                 <BubbleAnimation density={0.00015} minRadius={0.5} maxRadius={8} twinkleSpeed={0.05} />
                                 <EmptyHeader>
-                                    <EmptyMedia variant="icon">
-                                        <Icons.messageCircle />
-                                    </EmptyMedia>
+                                    <BrandLogo className="size-12"/>
                                     <EmptyTitle>Hi! I am Look, your AI Assistant</EmptyTitle>
                                     <EmptyDescription>
                                         What's on your mind? Ask anything
@@ -183,9 +183,10 @@ export default function ChatPanel() {
                                         variant="default"
                                         size="icon-sm"
                                         isDisabled={!input.trim() || isBusy}
-                                        className="ml-auto"
+                                        style= {{ opacity: !input.trim() ? "0.5" : "1"}}
+                                        className="ml-auto bg-transparent hover:bg-transparent text-white"
                                     >
-                                        <Icons.arrowUp />
+                                        <AssortedIcons.sendPlane className="size-6" />
                                         <span className="sr-only">Send</span>
                                     </InputGroupButton>
                                 </InputGroupAddon>

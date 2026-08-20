@@ -6,7 +6,7 @@ import {
     MessageScrollerViewport,
     useMessageScroller
 } from "@/components/ui/message-scroller"
-import { MessageAnimated } from "@/components/common/message-animated"
+import { MessageAnimated } from "@/components/features/chat/message-animated"
 
 export default function ChatMessages({
     messages,
@@ -26,13 +26,13 @@ export default function ChatMessages({
             scrollToMessage(lastMessage.id);
         });
     }, [messages, scrollToMessage]);
-
+    
     return (
         <>
             <MessageScrollerViewport>
                 <MessageScrollerContent
                     aria-busy={isBusy}
-                    className="p-(--card-spacing)"
+                    className="p-(--card-spacing) p-3"
                 >
                     {messages.map((message) => (
                         <MessageScrollerItem

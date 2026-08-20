@@ -1,6 +1,6 @@
 
 const AUTH_BASE = "/auth";
-const CHAT_BASE = "/chat";
+const CHAT_BASE = "/chats";
 const USER_BASE = "/users";
 
 export const API_ENDPOINTS = {
@@ -18,6 +18,7 @@ export const API_ENDPOINTS = {
   CHAT: {
     base: CHAT_BASE,
     sendMessage: () => CHAT_BASE,
-    deleteChat: (chatId: string) => `${CHAT_BASE}/${chatId}`
+    deleteChat: (chatId: string) => `${CHAT_BASE}/${chatId}`,
+    getChat: (chatId: string) => `${CHAT_BASE}/${chatId}`
   },
 };

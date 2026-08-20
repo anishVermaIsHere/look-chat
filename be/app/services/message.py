@@ -21,3 +21,4 @@ class MessageService:
             "role": message.role.value if hasattr(message.role, "value") else message.role,
             "created_at": message.created_at,
         }
+    

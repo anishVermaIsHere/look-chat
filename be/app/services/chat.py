@@ -2,7 +2,7 @@ import uuid
 
 from fastapi import Request, HTTPException, status
 from fastapi.responses import JSONResponse
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 
 from app.database.models.chat import Chat
 from app.database.models.message import MessageRole
@@ -145,7 +145,9 @@ class ChatService:
 
         return chat
 
-    def get_by_id(self, chat_id: uuid.UUID, db: Session) -> Chat | None:
+    def get_by_id(self, chat_id: uuid.UUID, db: Session, is_messages: bool = False) -> Chat | None:
+        if is_messages:
+            return (db.query(Chat).options(selectinload(Chat.messages)).filter(Chat.id == chat_id).first())
         return (db.query(Chat).filter(Chat.id == chat_id).first())
 
     def get_by_user_id(self, user_id: uuid.UUID, db: Session):

@@ -1,3 +1,4 @@
+import type { MouseEvent } from "react"
 import type { LucideIcon } from "lucide-react"
 
 
@@ -10,10 +11,10 @@ export type BasicChatOptionType = {
 
 export type ChatOption =
   | (BasicChatOptionType & {
-      handler: (chatId: string) => void | Promise<void>;
+      handler: (e: MouseEvent, chatId: string) => void | Promise<void>;
     })
   | (BasicChatOptionType & {
-      handler: (chatId: string) => void | Promise<void>;
+      handler: (e: MouseEvent, chatId: string) => void | Promise<void>;
     });
 
 export type ChatData = {
@@ -26,11 +27,28 @@ export type ChatData = {
 
 type MessageParts = {
   type: string,
-  text: string
+  text?: string,
+  state?: string
 }
 
 export type Message = {
   parts: MessageParts[],
   id: string,
   role: "user" | "assistant"
+}
+
+
+export type ResponseMessage = {
+  id: string,
+  chat_id: string,
+  sender: {
+    id: string,
+    location: {
+      latitude: number,
+      longitude: number
+    } | null
+  },
+  content: string,
+  role: string,
+  created_At: string
 }

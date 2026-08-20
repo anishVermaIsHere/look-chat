@@ -1,7 +1,6 @@
 import type { SVGProps } from "react"
 import type { LucideIcon } from "lucide-react"
 import {
-    ArrowLeft,
     CircleCheck,
     CircleX,
     AlignRight,
@@ -36,7 +35,10 @@ import {
     Pencil,
     Trash,
     Copy,
-    Share
+    Share,
+    ArrowLeftIcon,
+    ArrowRightIcon,
+    SendHorizontal
 } from "lucide-react"
 
 export const Icons: Record<string, LucideIcon> = {
@@ -49,6 +51,8 @@ export const Icons: Record<string, LucideIcon> = {
     panelLeft: PanelLeftIcon,
     arrowUp: ArrowUpIcon,
     arrowDown: ArrowDownIcon,
+    arrowLeft: ArrowLeftIcon,
+    arrowRight: ArrowRightIcon,
     globe: GlobeIcon,
     image: ImageIcon,
     messageCircle: MessageCircleDashedIcon,
@@ -58,7 +62,6 @@ export const Icons: Record<string, LucideIcon> = {
     plus: PlusIcon,
     loader: LoaderIcon,
     ellipsis: Ellipsis,
-    arrowLeft: ArrowLeft,
     chevronLeft: ChevronLeft,
     chevronRight: ChevronRight,
     chevronDown: ChevronDown,
@@ -75,7 +78,8 @@ export const Icons: Record<string, LucideIcon> = {
     location: MapPin,
     upload: Upload,
     copy: Copy,
-    share: Share
+    share: Share,
+    sendHorizontal: SendHorizontal
 };
 
 export const AssortedIcons: Record<string, React.ComponentType<SVGProps<SVGSVGElement>>> = {
@@ -86,10 +90,17 @@ export const AssortedIcons: Record<string, React.ComponentType<SVGProps<SVGSVGEl
       height="24"
       fill="currentColor"
       viewBox="0 0 24 24"
+
       {...props}
     >
       <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2M4 6h6v12H4zm8 12V6h8v12z" />
       <path d="M6 8h2v2H6zm0 4h2v2H6z" />
+    </svg>
+  ),
+  sendPlane: (props: SVGProps<SVGSVGElement>) => (
+    <svg  xmlns="http://www.w3.org/2000/svg" width="24" height="24"  
+    fill="currentColor" viewBox="0 0 24 24" {...props}>
+    <path d="m21.45 11.11-18-9c-.31-.15-.68-.14-.97.04s-.47.5-.47.85v18a1 1 0 0 0 1 1c.15 0 .31-.04.45-.11l18-9c.34-.17.55-.52.55-.89s-.21-.73-.55-.89ZM4 4.62 16.76 11H4zM4 13h12.76L4 19.38z"></path>
     </svg>
   ),
 };

@@ -35,3 +35,7 @@ def create_message(payload: MessagePayload, db: Session, req: Request):
 def delete_chat(chat_id: uuid.UUID, db: Session):
     response = chat_service.delete_by_id(chat_id, db)
     return JSONResponse(content=response)
+
+def get_chat(chat_id: uuid.UUID, db: Session):
+    response = chat_service.get_by_id(chat_id, db, True)
+    return JSONResponse(content=jsonable_encoder(response))
