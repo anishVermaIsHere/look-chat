@@ -1,0 +1,20 @@
+
+
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: lookchat
+    ports:
+      - "5432:5432"
+      
+  look_chat_api: 
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    ports: 
+      - 8000:8000
+    env_file:
+      - .env

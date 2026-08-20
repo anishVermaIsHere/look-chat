@@ -1,0 +1,54 @@
+# Keep the Docker image small and avoid leaking local state into prod.
+
+# Python build artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Virtualenvs (NEVER ship a venv inside the image)
+venv/
+.venv/
+winespeak_venv/
+env/
+
+# Secrets — env vars come from the deploy target, not the image
+.env
+.env.*
+!.env.example
+
+# Local DB and on-disk vector store — these live on a mounted volume in prod
+db.sqlite3
+db.sqlite3-journal
+vector_db/
+parent_documents/
+checkpoints/
+logs/
+*.log
+
+# Knowledge-base content lives outside this repo — handled via S3 or volume mount
+knowledge_base/
+
+# OS + IDE noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+
+# Git
+.git/
+.gitignore
+
+# Docker itself
+Dockerfile*
+.dockerignore
+docker-compose*.yml
+
+# Misc dev-only files
+_tmp_*.py
+.deepeval/
