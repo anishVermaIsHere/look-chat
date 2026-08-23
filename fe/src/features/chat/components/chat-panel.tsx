@@ -25,7 +25,7 @@ import {
     EmptyMedia,
     EmptyTitle,
 } from "@/components/ui/empty"
-import { SidebarTrigger } from "../../ui/sidebar"
+import { SidebarTrigger } from "@/components/ui/sidebar"
 import {
     InputGroup,
     InputGroupAddon,
@@ -33,7 +33,7 @@ import {
 } from "@/components/ui/input-group"
 import { MessageScroller, MessageScrollerProvider } from "@/components/ui/message-scroller"
 import ChatMessages from "./chat-messages"
-import { ProfileMenu } from "../../common/profile-menu"
+import { ProfileMenu } from "@/components/common/profile-menu"
 import { useQueryClient } from "@tanstack/react-query"
 import { ChatContext } from "@/context/chat-context"
 import BubbleAnimation from "./animation"

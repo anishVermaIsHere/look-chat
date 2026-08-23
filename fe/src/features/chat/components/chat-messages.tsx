@@ -6,7 +6,7 @@ import {
     MessageScrollerViewport,
     useMessageScroller
 } from "@/components/ui/message-scroller"
-import { MessageAnimated } from "@/components/features/chat/message-animated"
+import { MessageAnimated } from "@/features/chat/components/message-animated"
 
 export default function ChatMessages({
     messages,

@@ -10,7 +10,7 @@ import { Input } from "./ui/input"
 import { login } from "@/services/apis/auth"
 import { useNavigate } from "react-router-dom"
 import BrandLogo from "@/widgets/logo"
-import BubbleAnimation from "@/components/features/chat/animation"
+import BubbleAnimation from "@/features/chat/components/animation"
 
 
 export default function Login() {

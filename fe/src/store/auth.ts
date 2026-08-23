@@ -1,6 +1,6 @@
 import type { User } from "@/schemas/common"
 import { create } from "zustand"
-import { getSelf } from "@/services/apis/user"
+import { getSelf } from "@/features/user/services/apis/user"
 import { logout } from "@/services/apis/auth"
 
 

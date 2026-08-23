@@ -6,7 +6,6 @@ import { MESSAGE_ANIMATIONS } from "@/lib/message-animations"
 import MarkdownRenderer from "@/components/common/markdown-referer"
 import Typing from "@/widgets/typing"
 import BrandLogo from "@/widgets/logo"
-import { AppConfig } from "@/config/app-config"
 import { toast } from "@/components/ui/toast"
 
 

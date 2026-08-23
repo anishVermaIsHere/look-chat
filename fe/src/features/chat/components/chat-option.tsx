@@ -13,7 +13,7 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import type { ChatData, ChatOption } from "@/types/chat"
+import type { ChatData, ChatOption } from "@/features/chat/types/chat"
 import { Icons } from "@/widgets/icons"
 
 

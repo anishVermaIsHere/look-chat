@@ -3,8 +3,8 @@ import type { MouseEvent } from "react"
 import { ChatContext } from "@/context/chat-context"
 import { Icons } from "@/widgets/icons"
 import { useQueryClient } from "@tanstack/react-query"
-import { deleteChat } from "@/services/apis/chat"
-import type { ChatOption } from "@/types/chat"
+import { deleteChat } from "@/features/chat/services/apis/chat"
+import type { ChatOption } from "@/features/chat/types/chat"
 
 
 

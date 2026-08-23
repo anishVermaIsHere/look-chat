@@ -1,4 +1,4 @@
-import axiosInstance from ".."
+import axiosInstance from "../../../../services"
 import { API_ENDPOINTS } from "@/services/apis/endpoints"
 
 const { USER } = API_ENDPOINTS;

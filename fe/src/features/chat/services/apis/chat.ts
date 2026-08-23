@@ -1,4 +1,4 @@
-import axiosInstance from ".."
+import axiosInstance from "../../../../services"
 import type { SendMessageSchema } from "@/schemas/common"
 import { API_ENDPOINTS } from "@/services/apis/endpoints"
 

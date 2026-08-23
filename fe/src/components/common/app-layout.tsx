@@ -1,8 +1,8 @@
 import { type ReactNode } from "react"
-import ChatPanel from "../features/chat/chat-panel"
+import ChatPanel from "@/features/chat/components/chat-panel"
 import { SidebarProvider } from "../ui/sidebar"
 import AppSidebar from "./sidebar"
-import { ChatProvider } from "@/providers/chat-provider"
+import { ChatProvider } from "@/features/chat/provider/chat-provider"
 
 
 const AppLayout = ({ children }: { children?: ReactNode }) => {

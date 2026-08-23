@@ -13,7 +13,7 @@ const MarkdownRenderer = ({ keyIndex, content }: MarkdownRendererPropsType) => {
         remarkPlugins={[remarkGfm]}
         components={{
             pre: ({ children }) => (
-            <pre className="my-4 p-3 w-full min-w-0 overflow-x-auto rounded text-gray-600 font-semibold bg-purple-100">
+            <pre className="my-4 p-3 w-full min-w-0 overflow-x-auto rounded font-semibold bg-black text-yellow-600">
                 {children}
             </pre>
             ),
