@@ -57,8 +57,7 @@ FastAPI
 ```
 
 
-### Screens
+### Screen Video
 
-![New Chat](./chat-panel-screen-2.png)
+https://github.com/user-attachments/assets/5ebd66f0-cd2c-43e0-a87c-16e64fe57ba0
 
-![Conversations](./chat-panel-screen.png)
