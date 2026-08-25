@@ -1,7 +1,6 @@
 from passlib.context import CryptContext
 
 
-
 class SecurePassword:
     def __init__(self):
         self.pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
