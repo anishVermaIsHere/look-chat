@@ -1,6 +1,6 @@
 from openai import OpenAI
 
-from app.config import OPENAI_API_KEY
+from app.core.config import OPENAI_API_KEY
 from app.llm.base import LLMProvider
 
 

@@ -8,6 +8,7 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar"
 import useAuthStore from "@/store/auth"
 import { getUserChats } from "@/features/user/services/apis/user"
@@ -24,12 +25,18 @@ import BrandLogo from "@/widgets/logo"
 export default function AppSidebar() {
   const { user } = useAuthStore(s=>s);
   const menu = useChatBubbleMenu();
-  const { chatId, setChatId, chat } = useContext(ChatContext)
+  const { chatId, setChatId, chat } = useContext(ChatContext);
+  const { toggleSidebar, isMobile } = useSidebar();
   const { isPending, data } = useQuery({
     queryKey: ['chats'],
     queryFn: async () => await getUserChats(user?.id as string)
   });
   const chats = data?.data || [];
+
+  const loadChat = async (chatId: string)=> {
+    fetchChat(chatId as string);
+    if(isMobile) { toggleSidebar(); }
+  }
 
 
   async function fetchChat(selectedChatId: string){
@@ -83,7 +90,7 @@ export default function AppSidebar() {
         <SidebarMenu>
           {chats?.map((ch: ChatData) => (
             <SidebarMenuItem key={ch?.id}>
-              <SidebarMenuButton className="font-light flex justify-between" style={chatId === ch.id && { background: "#403c55" }} onClick={()=>fetchChat(ch?.id as string)}>
+              <SidebarMenuButton className="font-light flex justify-between" style={chatId === ch.id && { background: "#403c55" }} onClick={()=>loadChat(ch?.id as string)}>
                 <span className="truncate" title={ch?.title}>{ch?.title}</span>
                 <ChatOptions chatData={ch} menu={menu}/>
               </SidebarMenuButton>

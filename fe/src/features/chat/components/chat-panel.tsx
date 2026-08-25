@@ -44,11 +44,14 @@ import BrandLogo from "@/widgets/logo"
 export default function ChatPanel() {
     const queryClient = useQueryClient();
     const hasSentMessage = useRef(false);
-    const { chat: { messages, sendMessage, status, setMessages }, input, setInput } = useContext(ChatContext);
+    const { chat: { messages, sendMessage, status, setMessages }, input, setInput, setChatId } = useContext(ChatContext);
 
     const isBusy = status === "submitted" || status === "streaming"
 
-    const resetChat = () => setMessages([]);
+    const resetChat = () => {
+        setMessages([]);
+        setChatId("");
+    }
 
     const submitMessage = async (e: SyntheticEvent) => {
         e.preventDefault();

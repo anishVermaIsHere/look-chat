@@ -1,16 +1,17 @@
 
 
 services:
-  db:
-    image: postgres:16
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: lookchat
-    ports:
-      - "5432:5432"
+  # db:
+  #   image: postgres:16
+  #   environment:
+  #     POSTGRES_USER: postgres
+  #     POSTGRES_PASSWORD: postgres
+  #     POSTGRES_DB: lookchat
+  #   ports:
+  #     - "5432:5432"
       
-  look_chat_api: 
+  backend: 
+    container_name: look_chat_api
     build: 
       context: .
       dockerfile: Dockerfile
@@ -19,4 +20,11 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
+      - redis
+
+
+  redis:
+    image: redis:latest
+    container_name: redis_look_chat
+    ports:
+      - "6379:6379"
