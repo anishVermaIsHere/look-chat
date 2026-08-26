@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.schemas.auth import RegisterRequest, LoginRequest
 from app.services.auth import AuthService
-from app.config import ACCESS_TOKEN_EXPIRE_HOURS, REFRESH_TOKEN_EXPIRE_DAYS
+from app.core.config import JWT
 
 
 auth_service = AuthService()
@@ -22,7 +22,7 @@ def login(data: LoginRequest, db: Session, res: Response):
             httponly=True,   # Protects against XSS attacks
             secure=False,     # Forces HTTPS
             samesite="lax",   # Protects against CSRF attacks
-            max_age=int(ACCESS_TOKEN_EXPIRE_HOURS)*3600,
+            max_age=int(JWT["ACCESS_TOKEN_EXPIRE_HOURS"])*3600,
         )
         res.set_cookie(
             key="_rt", 
@@ -30,6 +30,6 @@ def login(data: LoginRequest, db: Session, res: Response):
             httponly=True,   # Protects against XSS attacks
             secure=False,     # Forces HTTPS
             samesite="lax",   # Protects against CSRF attacks
-            max_age=int(REFRESH_TOKEN_EXPIRE_DAYS)*3600*24,
+            max_age=int(JWT["REFRESH_TOKEN_EXPIRE_DAYS"])*3600*24,
         )
     return { "success": auth_res["success"], "user": auth_res["user"] }

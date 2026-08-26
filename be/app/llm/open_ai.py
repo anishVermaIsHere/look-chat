@@ -1,13 +1,13 @@
 from openai import OpenAI
 
-from app.core.config import OPENAI_API_KEY
+from app.core.config import MODEL_API_KEY
 from app.llm.base import LLMProvider
 
 
 class OpenAIProvider(LLMProvider):
     
     def __init__(self, model: str = "gpt-4o-mini"):
-        self.client = OpenAI(api_key=OPENAI_API_KEY)
+        self.client = OpenAI(api_key=MODEL_API_KEY["OPENAI"])
         self.model = model
 
     def ask(self, message: str) -> str:
