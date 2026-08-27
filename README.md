@@ -6,9 +6,7 @@ A full-stack AI chat application built with React and FastAPI.
 
 | Folder | Description| Tech |  
 |--------|---------|---------|
-| `be/` | Backend | FastAPI, PostgreSQL, SQLAlchemy, Redis, 
-
-JWT |
+| `be/` | Backend | FastAPI, PostgreSQL, SQLAlchemy, Redis, JWT |
 | `fe/` | Frontend | React, TypeScript, ShadeCN, AI SDK React |
 
 
