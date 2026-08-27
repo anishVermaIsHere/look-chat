@@ -181,7 +181,7 @@ function MessageAnimatedRow({
             >
               
               <BubbleContent className="space-y-2">
-                {isGenerating ? <Typing /> : ''}
+                {isGenerating ? <div className="flex items-center gap-2 italic">Thinking <Typing /> </div> : ''}
                 {paragraphs.map((paragraph) => (
                     <MarkdownRenderer key={message.id} keyIndex={message.id} content={paragraph} />
                 ))}

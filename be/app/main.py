@@ -1,15 +1,35 @@
 from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy.orm import configure_mappers
+from contextlib import asynccontextmanager
 
-from app.database.database import Base, engine
 from app.routes.chat import router as chat_router
 from app.routes.auth import router as auth_router
 from app.routes.user import router as user_router
 from app.middleware.auth import verify_auth
+from app.core.cache import init_redis, close_redis
+from app.database.database import init_db, close_db
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # 1. Startup phase
+    init_db()
+    await init_redis()
+    
+    try:
+        yield
+    finally:
+        # 2. Shutdown phase (LIFO - Last In, First Out)
+        await close_redis()  # Close Redis first
+        close_db()     # Close DB second
+
+
+
 
 configure_mappers()
-app = FastAPI(title="Look Chat API")
+
+
+app = FastAPI(title="Look Chat API", lifespan=lifespan)
 
 origins = [
     "http://localhost:3000",
@@ -24,8 +44,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-Base.metadata.create_all(bind=engine)
 
 app_router = APIRouter(prefix="/api/v1")
 app.middleware("http")(verify_auth)

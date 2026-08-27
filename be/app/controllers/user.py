@@ -1,5 +1,6 @@
 from fastapi import Request
 from uuid import UUID, uuid4
+from redis.asyncio import Redis
 from sqlalchemy.orm import Session
 
 
@@ -27,6 +28,6 @@ def get_users():
         }
     ]
 
-def get_self(req: Request, db: Session):
+async def get_self(req: Request, db: Session, redis: Redis):
     auth_service = AuthService()
-    return auth_service.self(req, db)
+    return await auth_service.self(req, db, redis)

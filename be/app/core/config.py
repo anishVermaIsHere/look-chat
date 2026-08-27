@@ -1,7 +1,11 @@
 import os
+
 from dotenv import load_dotenv
 
+
 load_dotenv(".env")
+
+
 
 # Base URL
 BASE_URL = os.getenv("BASE_URL", "http://localhost:8000")
@@ -38,6 +42,6 @@ LOGIN = {
 
 # REDIS
 REDIS = {
-    "HOST": os.getenv("REDIS_HOST", "redis"),
+    "HOST": os.getenv("REDIS_HOST", "localhost"),
     "PORT": os.getenv("REDIS_PORT", 6379)
 }
