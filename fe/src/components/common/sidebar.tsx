@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/sidebar"
 import useAuthStore from "@/store/auth"
 import { getUserChats } from "@/features/user/services/apis/user"
-import { getChat } from "@/features/chat/services/apis/chat"
+import { getChat, searchChat } from "@/features/chat/services/apis/chat"
 import { useQuery } from "@tanstack/react-query"
 import Spinner from "@/widgets/spinner"
 import ChatOptions from "@/features/chat/components/chat-option"
@@ -20,18 +20,40 @@ import type { ChatData, ResponseMessage } from "@/features/chat/types/chat"
 import useChatBubbleMenu from "@/hooks/use-chat-bubble-menu"
 import { ChatContext } from "@/context/chat-context"
 import BrandLogo from "@/widgets/logo"
+import Searchbar from "@/features/chat/components/searchbar"
+import useAppStore from "@/store/app"
 
+
+async function onSearch(query: string){
+  if(query.length >= 3) {
+   return await searchChat(query);
+  } 
+  return []
+}
 
 export default function AppSidebar() {
   const { user } = useAuthStore(s=>s);
   const menu = useChatBubbleMenu();
   const { chatId, setChatId, chat } = useContext(ChatContext);
+  const { searchInput } = useAppStore(s=>s);
   const { toggleSidebar, isMobile } = useSidebar();
-  const { isPending, data } = useQuery({
-    queryKey: ['chats'],
-    queryFn: async () => await getUserChats(user?.id as string)
+
+  const { isPending, data: chatData } = useQuery({
+    queryKey: ["chats"],
+    queryFn: () => getUserChats(user?.id as string),
+    enabled: !!user?.id,
   });
-  const chats = data?.data || [];
+
+  const search = searchInput.trim();
+
+  const { data: searchData } = useQuery({
+      queryKey: ["chat-search", search],
+      queryFn: () => onSearch(search),
+      enabled: Boolean(search.length)
+  });
+
+  const chats = search ? searchData?.data ?? [] : chatData?.data ?? [];
+
 
   const loadChat = async (chatId: string)=> {
     fetchChat(chatId as string);
@@ -87,6 +109,7 @@ export default function AppSidebar() {
         <BrandLogo /> Chats
       </SidebarHeader>
       <SidebarContent className="px-2">
+        <Searchbar onSearch={searchChat} />
         <SidebarMenu>
           {chats?.map((ch: ChatData) => (
             <SidebarMenuItem key={ch?.id}>

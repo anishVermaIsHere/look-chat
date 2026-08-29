@@ -19,6 +19,7 @@ export const API_ENDPOINTS = {
     base: CHAT_BASE,
     sendMessage: () => CHAT_BASE,
     deleteChat: (chatId: string) => `${CHAT_BASE}/${chatId}`,
-    getChat: (chatId: string) => `${CHAT_BASE}/${chatId}`
+    getChat: (chatId: string) => `${CHAT_BASE}/${chatId}`,
+    searchChat: () => `${CHAT_BASE}/search`
   },
 };

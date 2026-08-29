@@ -3,6 +3,7 @@ import uuid
 from fastapi import Request, HTTPException, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session, selectinload
+from sqlalchemy import select
 
 from app.database.models.chat import Chat
 from app.database.models.message import MessageRole
@@ -163,3 +164,17 @@ class ChatService:
         db.commit()
 
         return { "success": True }
+
+    def search(self, q: str | None, user_id: uuid.UUID, db: Session):
+        query = (
+            select(Chat)
+            .where(
+                Chat.user_id == user_id,
+                Chat.title.ilike(f"%{q}%")
+            )
+            .order_by(Chat.created_at.desc())
+        )
+
+        result = db.execute(query)
+
+        return result.scalars().all()

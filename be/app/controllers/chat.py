@@ -39,3 +39,8 @@ def delete_chat(chat_id: uuid.UUID, db: Session):
 def get_chat(chat_id: uuid.UUID, db: Session):
     response = chat_service.get_by_id(chat_id, db, True)
     return JSONResponse(content=jsonable_encoder(response))
+
+def search_chat(query: str| None, db: Session, req: Request):
+    user_id = req.state.user["sub"]
+    response = chat_service.search(query, user_id, db)
+    return JSONResponse(content=jsonable_encoder(response))

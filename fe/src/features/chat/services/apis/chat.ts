@@ -28,9 +28,17 @@ async function getChat(chatId: string){
   }
 }
 
+async function searchChat(q: string){
+  try {
+    return await axiosInstance.get(CHAT.searchChat(), { withCredentials: true, params: { q }})
+  } catch(error){
+    console.log("ERROR", error)
+  }
+}
 
 export {
   sendMessage,
   deleteChat,
-  getChat
+  getChat,
+  searchChat
 }

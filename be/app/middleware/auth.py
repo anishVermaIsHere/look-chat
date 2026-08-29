@@ -4,6 +4,7 @@ from fastapi.responses import JSONResponse
 from app.utils.jwt import JWTService
 from app.routes.paths import PUBLIC_PATHS
 
+
 async def verify_auth(req: Request, next):
     if req.method == "OPTIONS":
         return await next(req)
@@ -13,7 +14,6 @@ async def verify_auth(req: Request, next):
 
     jwt_service = JWTService()
     token = req.cookies.get("_at")
-
 
     if not token:
         return JSONResponse(status_code=401, content={ "message": "Unauthorised" })
