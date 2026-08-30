@@ -1,11 +1,11 @@
 from fastapi import Request
 from uuid import UUID, uuid4
-from redis.asyncio import Redis
 from sqlalchemy.orm import Session
 
 
 from app.schemas.users import CreateUser
 from app.services.auth import AuthService
+from app.utils.redis import Cache
 
 
 def create_user(user: CreateUser):
@@ -28,6 +28,6 @@ def get_users():
         }
     ]
 
-async def get_self(req: Request, db: Session, redis: Redis):
+async def get_self(req: Request, db: Session, redis: Cache):
     auth_service = AuthService()
     return await auth_service.self(req, db, redis)

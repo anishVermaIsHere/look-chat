@@ -1,17 +1,17 @@
 from redis.asyncio import Redis
+
 from app.core.config import REDIS
+from app.utils.redis import RedisCache, NoOpCache
 
 redis_client: Redis | None = None
 
-# redis = Redis(
-#     host=REDIS["HOST"],
-#     port=REDIS["PORT"],
-#     decode_responses=True,
-# )
-
-async def init_redis() -> Redis:
+async def init_redis() -> Redis | None:
     global redis_client
-    redis_client = Redis(
+    if not REDIS["ENABLED"]:
+        redis_client = None
+        return None
+    
+    redis_client = RedisCache(
         host=REDIS["HOST"],
         port=REDIS["PORT"],
         decode_responses=True,
@@ -25,7 +25,11 @@ async def close_redis() -> None:
     if redis_client:
         await redis_client.close()
 
-async def get_redis() -> Redis:
+def get_redis() -> Redis:
     if redis_client is None:
-        raise RuntimeError("Redis client is not initialized.")
+        return NoOpCache()
+    
     return redis_client
+
+
+

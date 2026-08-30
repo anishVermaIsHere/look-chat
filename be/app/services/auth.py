@@ -5,12 +5,12 @@ from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from uuid import uuid4
 from sqlalchemy.orm import Session
-from redis.asyncio import Redis
 
 
 from app.database.models.user import User
 from app.utils.security import SecurePassword
 from app.utils.jwt import JWTService
+from app.utils.redis import Cache
 from app.schemas.auth import RegisterRequest, LoginRequest, RegisterResponse, LoginResponse
 from app.schemas.users import UserResponse
 
@@ -82,7 +82,7 @@ class AuthService():
             "user": UserResponse.model_validate(user)
         }
 
-    async def self(self, req: Request, db: Session, redis: Redis):
+    async def self(self, req: Request, db: Session, redis: Cache):
         current_user = req.state.user
         user_id = current_user.get('sub')
         user_cache_key = f"user:profile:{user_id}"
@@ -104,7 +104,8 @@ class AuthService():
         user_data.pop("password", None)  
         user_data.pop("created_at", None)
         safe_user_data = jsonable_encoder(user_data)
-        await redis.set(user_cache_key, json.dumps(safe_user_data), ex=3600)
+
+        await redis.set(user_cache_key, json.dumps(safe_user_data), expire=3600)
 
         return {"authenticated": True, "user": safe_user_data }
         

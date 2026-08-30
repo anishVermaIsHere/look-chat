@@ -43,5 +43,6 @@ LOGIN = {
 # REDIS
 REDIS = {
     "HOST": os.getenv("REDIS_HOST", "localhost"),
-    "PORT": os.getenv("REDIS_PORT", 6379)
+    "PORT": os.getenv("REDIS_PORT", 6379),
+    "ENABLED": os.getenv("REDIS_ENABLED", "false").lower() == "true"
 }

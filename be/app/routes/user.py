@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Request, Depends
 from sqlalchemy.orm import Session 
-from redis.asyncio import Redis
 
 from app.controllers.user import get_self
 from app.controllers.chat import get_user_chats
 from app.database.database import get_db
 from app.core.cache import get_redis
+from app.utils.redis import Cache
 
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -23,7 +23,7 @@ def create_user(user_payload):
     return
 
 @router.get("/profile")
-async def self_user(req: Request, db: Session = Depends(get_db), redis: Redis = Depends(get_redis) ):
+async def self_user(req: Request, db: Session = Depends(get_db), redis: Cache = Depends(get_redis) ):
     return await get_self(req, db, redis)
 
 @router.get("/{user_id}/chats")

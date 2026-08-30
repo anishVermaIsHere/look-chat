@@ -109,7 +109,7 @@ export default function AppSidebar() {
         <BrandLogo /> Chats
       </SidebarHeader>
       <SidebarContent className="px-2">
-        <Searchbar onSearch={searchChat} />
+        <Searchbar />
         <SidebarMenu>
           {chats?.map((ch: ChatData) => (
             <SidebarMenuItem key={ch?.id}>
