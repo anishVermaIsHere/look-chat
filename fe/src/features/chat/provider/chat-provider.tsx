@@ -67,8 +67,10 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
   return (
-    <ChatContext.Provider value={{ chat, input, setInput, chatId, setChatId }}>
+    <ChatContext value={{ chat, input, setInput, chatId, setChatId }}>
+      <div data-testid="chat-context-wrapper">
       {children}
-    </ChatContext.Provider>
+      </div>
+    </ChatContext>
   );
 }

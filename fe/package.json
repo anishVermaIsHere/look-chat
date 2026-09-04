@@ -6,10 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "test": "cross-env NODE_OPTIONS=--experimental-require-module vitest --config vitest.config.ts",
+    "test:ui": "vitest --ui --config vitest.config.ts",
     "lint": "eslint .",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "preview": "vite preview"
+  },
+  "overrides": {
+    "@asamuzakjp/css-color": {
+      "@csstools/css-calc": "$@csstools/css-calc"
+    }
   },
   "dependencies": {
     "@ai-sdk/react": "^4.0.51",
@@ -51,19 +58,26 @@
     "@eslint/js": "^10",
     "@rolldown/binding-win32-x64-msvc": "latest",
     "@tailwindcss/typography": "^0.5.20",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
     "@types/node": "^24",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6",
+    "cross-env": "^10.1.0",
     "eslint": "^10",
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17",
+    "jsdom": "^27.0.1",
+    "msw": "^2.15.0",
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "typescript": "~6",
     "typescript-eslint": "^8",
-    "vite": "^8"
+    "vite": "^8",
+    "vitest": "^4.1.11"
   },
   "optionalDependencies": {
     "@rolldown/binding-win32-x64-msvc": "^1.2.1"

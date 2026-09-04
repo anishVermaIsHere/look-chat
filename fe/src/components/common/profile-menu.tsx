@@ -14,7 +14,7 @@ export function ProfileMenu() {
   const { user, logOut } = useAuthStore(s=>s);
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger render={<Button variant="outline" className="rounded-full">{user?.firstName.slice(0,1)}</Button>} />
+      <DropdownMenuTrigger render={<Button variant="outline" className="rounded-full" data-testid="profile-menu">{user?.firstName.slice(0,1)}</Button>} />
       <DropdownMenuContent>
         <DropdownMenuItem variant="destructive" onClick={logOut}>
           <Icons.logout />

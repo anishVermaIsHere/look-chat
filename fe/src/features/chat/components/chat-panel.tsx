@@ -96,7 +96,6 @@ export default function ChatPanel() {
                     <CardContent className="flex-1 w-full overflow-hidden p-0">
                         {!messages.length ? (
                             <Empty className="h-full relative">
-                                <BubbleAnimation density={0.00015} minRadius={0.5} maxRadius={8} twinkleSpeed={0.05} />
                                 <EmptyHeader>
                                     <BrandLogo className="size-12"/>
                                     <EmptyTitle>Hi! I am Look, your AI Assistant</EmptyTitle>
@@ -107,7 +106,6 @@ export default function ChatPanel() {
                             </Empty>
                         ) : (
                             <MessageScroller className="relative">
-                                <BubbleAnimation density={0.00015} minRadius={0.5} maxRadius={8} twinkleSpeed={0.05} />
                                 <ChatMessages messages={messages} isBusy={isBusy} status={status}/>
                             </MessageScroller>
                         )}

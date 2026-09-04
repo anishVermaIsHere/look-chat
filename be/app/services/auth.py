@@ -26,7 +26,6 @@ class AuthService():
         ).first()
 
         if user:
-            print('BEFORE ERROR')
             raise Exception("Email already exists")
         secure_password = SecurePassword()
 
