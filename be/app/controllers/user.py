@@ -12,6 +12,7 @@ def create_user(user: CreateUser):
     # Business logic
 
     return {
+        "status"
         "message": "User created successfully",
         "user": user
     }

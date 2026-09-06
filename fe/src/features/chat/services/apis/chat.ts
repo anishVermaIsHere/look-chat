@@ -32,7 +32,8 @@ async function searchChat(q: string){
   try {
     return await axiosInstance.get(CHAT.searchChat(), { withCredentials: true, params: { q }})
   } catch(error){
-    console.log("ERROR", error)
+    console.log("ERROR", error);
+    throw error
   }
 }
 

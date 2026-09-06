@@ -6,13 +6,13 @@ import { AppConfig } from "@/config/app-config"
 import { API_ENDPOINTS } from "@/services/apis/endpoints"
 import { getUserLocation } from "@/utils"
 import { ChatContext } from "@/context/chat-context"
+import type { UserLocation } from "../types/chat"
 
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
     const [input, setInput] = useState<string>("");
     const [chatId, setChatId] = useState<string>("");
-    // const chatIdRef = useRef<string | null>(null);
-    const [location, setLocation] = useState(null);
+    const [location, setLocation] = useState<Omit<UserLocation, "accuracy"> | null>(null);
     const chat = useChat({
             transport: new TextStreamChatTransport({
               api: `${AppConfig.baseUrl}/api/v1${API_ENDPOINTS.CHAT.sendMessage()}`,

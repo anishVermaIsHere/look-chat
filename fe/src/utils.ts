@@ -1,6 +1,7 @@
+import type { UserLocation } from "./features/chat/types/chat";
 
 // Function to get current coordinates
-export function getUserLocation() {
+export function getUserLocation(): Promise<UserLocation> {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
       reject(new Error("Geolocation is not supported by your browser"));

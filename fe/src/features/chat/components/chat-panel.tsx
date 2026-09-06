@@ -1,4 +1,4 @@
-import { useEffect, useRef, useContext } from "react"
+import { useEffect, useRef } from "react"
 import type { SyntheticEvent } from "react"
 import { Icons, AssortedIcons } from "@/widgets/icons"
 import { Button } from "@/components/ui/button"
@@ -6,23 +6,18 @@ import {
     Card,
     CardAction,
     CardContent,
-    CardDescription,
     CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
 import {
     DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuItem,
-    DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {
     Empty,
     EmptyDescription,
     EmptyHeader,
-    EmptyMedia,
     EmptyTitle,
 } from "@/components/ui/empty"
 import { SidebarTrigger } from "@/components/ui/sidebar"
@@ -35,8 +30,7 @@ import { MessageScroller, MessageScrollerProvider } from "@/components/ui/messag
 import ChatMessages from "./chat-messages"
 import { ProfileMenu } from "@/components/common/profile-menu"
 import { useQueryClient } from "@tanstack/react-query"
-import { ChatContext } from "@/context/chat-context"
-import BubbleAnimation from "./animation"
+import { useChatContext } from "@/context/chat-context"
 import { AppConfig } from "@/config/app-config"
 import BrandLogo from "@/widgets/logo"
 
@@ -44,7 +38,7 @@ import BrandLogo from "@/widgets/logo"
 export default function ChatPanel() {
     const queryClient = useQueryClient();
     const hasSentMessage = useRef(false);
-    const { chat: { messages, sendMessage, status, setMessages }, input, setInput, setChatId } = useContext(ChatContext);
+    const { chat: { messages, sendMessage, status, setMessages }, input, setInput, setChatId } = useChatContext();
 
     const isBusy = status === "submitted" || status === "streaming"
 
@@ -85,7 +79,7 @@ export default function ChatPanel() {
                                 size="icon"
                                 aria-label="New chat"
                                 onClick={resetChat}
-                                isDisabled={isBusy}
+                                disabled={isBusy}
                                 className="w-20 flex gap-2"
                             >
                                 <Icons.plus /> Chat
@@ -183,7 +177,7 @@ export default function ChatPanel() {
                                         type="submit"
                                         variant="default"
                                         size="icon-sm"
-                                        isDisabled={!input.trim() || isBusy}
+                                        disabled={!input.trim() || isBusy}
                                         style= {{ opacity: !input.trim() ? "0.5" : "1"}}
                                         className="ml-auto bg-transparent hover:bg-transparent text-white"
                                     >

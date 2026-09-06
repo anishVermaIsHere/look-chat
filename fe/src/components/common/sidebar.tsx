@@ -1,4 +1,3 @@
-import { useContext } from "react"
 import {
   Sidebar,
   SidebarContent,
@@ -18,23 +17,24 @@ import Spinner from "@/widgets/spinner"
 import ChatOptions from "@/features/chat/components/chat-option"
 import type { ChatData, ResponseMessage } from "@/features/chat/types/chat"
 import useChatBubbleMenu from "@/hooks/use-chat-bubble-menu"
-import { ChatContext } from "@/context/chat-context"
+import { useChatContext } from "@/context/chat-context"
 import BrandLogo from "@/widgets/logo"
 import Searchbar from "@/features/chat/components/searchbar"
 import useAppStore from "@/store/app"
 
 
-async function onSearch(query: string){
+async function onSearch(query: string): Promise<ChatData[]>{
   if(query.length >= 3) {
-   return await searchChat(query);
+   const res = await searchChat(query);
+   return res.data;
   } 
-  return []
+  return [];
 }
 
 export default function AppSidebar() {
   const { user } = useAuthStore(s=>s);
   const menu = useChatBubbleMenu();
-  const { chatId, setChatId, chat } = useContext(ChatContext);
+  const { chatId, setChatId, chat } = useChatContext();
   const { searchInput } = useAppStore(s=>s);
   const { toggleSidebar, isMobile } = useSidebar();
 
@@ -52,7 +52,7 @@ export default function AppSidebar() {
       enabled: Boolean(search.length)
   });
 
-  const chats = search ? searchData?.data ?? [] : chatData?.data ?? [];
+  const chats = search ? searchData ?? [] : chatData?.data ?? [];
 
 
   const loadChat = async (chatId: string)=> {
@@ -113,7 +113,9 @@ export default function AppSidebar() {
         <SidebarMenu>
           {chats?.map((ch: ChatData) => (
             <SidebarMenuItem key={ch?.id}>
-              <SidebarMenuButton className="font-light flex justify-between" style={chatId === ch.id && { background: "#403c55" }} onClick={()=>loadChat(ch?.id as string)}>
+              <SidebarMenuButton 
+                className={`font-light flex justify-between ${chatId === ch.id ? 'bg-[#403c55]' : ''} `} 
+                onClick={()=>loadChat(ch?.id as string)}>
                 <span className="truncate" title={ch?.title}>{ch?.title}</span>
                 <ChatOptions chatData={ch} menu={menu}/>
               </SidebarMenuButton>

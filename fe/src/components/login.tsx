@@ -1,3 +1,4 @@
+import { isAxiosError } from "axios"
 import { toast } from "@/components/ui/toast"
 import useAuthStore from "@/store/auth"
 import { Controller, useForm } from "react-hook-form"
@@ -8,13 +9,14 @@ import { Button } from "./ui/button"
 import { Field, FieldError, FieldGroup, FieldLabel } from "./ui/field"
 import { Input } from "./ui/input"
 import { login } from "@/services/apis/auth"
-import { useNavigate } from "react-router-dom"
+import { useNavigate, useSearchParams } from "react-router-dom"
 import BrandLogo from "@/widgets/logo"
 
 
 export default function Login() {
   const { setUser } = useAuthStore(s=>s);
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -38,23 +40,27 @@ export default function Login() {
       }
     } catch (error) {
       console.error("Error while login", error);
-      toast.add({ type: "error", priority: "high", description: error?.response?.data?.message });
+      if(isAxiosError(error)){
+        toast.add({ type: "error", priority: "high", description: error?.response?.data?.message });
+      }
     }
   }
 
+  const handleRegisterLink = () => setSearchParams({ auth_type: "register" })
+
   return (
     <section className="flex flex-col justify-center items-center min-h-screen">
-        <div className="flex flex-col items-center justify-center space-y-12 sm:shadow-xl sm:rounded-2xl px-6 py-10 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 bg-main">
+        <div className="flex flex-col items-center justify-center space-y-4 sm:shadow-xl sm:rounded-2xl px-6 py-10 w-full sm:w-1/2 lg:w-1/3 xl:w-1/4 bg-main">
           <div className="flex flex-col items-center mb-5">
             {/* <CommonAvatar /> */}
-            <p className="text-xl text-gray-100"><BrandLogo /> {AppConfig.appName}</p>
+            <p className="flex items-center gap-2 text-xl text-gray-100"><BrandLogo className="size-8" /> {AppConfig.appName}</p>
             {/* <FormDescription>Login into your account</FormDescription> */}
           </div>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="w-full space-y-6"
+            className="w-full"
           >
-            <FieldGroup>
+            <FieldGroup className="gap-4">
              <Controller
               name="email"
               control={form.control}
@@ -107,6 +113,8 @@ export default function Login() {
             </Button>
             </FieldGroup>
           </form>
+          <p className="text-sm">Not a Member ?</p>
+          <Button className="w-full bg-primary" type="button" onClick={handleRegisterLink}>Register</Button>
         </div>
       <div className="flex items-center justify-center px-2 py-6">
         &#169; Copyright {new Date().getFullYear()} {AppConfig.appName}

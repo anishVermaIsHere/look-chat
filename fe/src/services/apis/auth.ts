@@ -1,8 +1,17 @@
 import axiosInstance from ".."
-import type { LoginSchema } from "@/schemas/common"
+import type { LoginSchema, RegisterSchema } from "@/schemas/common"
 import { API_ENDPOINTS } from "@/services/apis/endpoints"
 
 const { AUTH } = API_ENDPOINTS;
+
+async function signup(credentials: Omit<RegisterSchema,"confirmPassword">) {
+  try {
+    return await axiosInstance.post(AUTH.register(), credentials, { withCredentials: true });
+  } catch (error) {
+    console.log("ERROR", error)
+  }
+}
+
 
 async function login(credentials: LoginSchema) {
   try {
@@ -20,4 +29,4 @@ async function logout(){
   }
 }
 
-export { login, logout }
+export { signup, login, logout }

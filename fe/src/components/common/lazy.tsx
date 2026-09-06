@@ -1,8 +1,8 @@
-import { lazy, Suspense, type ReactNode } from "react";
+import { lazy, Suspense } from "react";
 import Spinner from "@/widgets/spinner";
 import { Outlet } from "react-router-dom";
 
-const LazyLoader = ({ children }: { children?: ReactNode }) => {
+const LazyLoader = () => {
   return (
     <Suspense fallback={<Spinner />}>
       <Outlet />

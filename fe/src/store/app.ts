@@ -6,7 +6,7 @@ export type AppStoreType = {
 };
 
 
-const useAppStore = create<AppStoreType>((set, get) => ({
+const useAppStore = create<AppStoreType>((set) => ({
   searchInput: "",
   setSearchInput: (input: string) => set({ searchInput: input }),
 }));

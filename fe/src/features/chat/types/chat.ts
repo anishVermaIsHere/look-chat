@@ -37,16 +37,18 @@ export type Message = {
   role: "user" | "assistant"
 }
 
+export type UserLocation = {
+  latitude: number,
+  longitude: number,
+  accuracy: number
+}
 
 export type ResponseMessage = {
   id: string,
   chat_id: string,
   sender: {
     id: string,
-    location: {
-      latitude: number,
-      longitude: number
-    } | null
+    location: Omit<UserLocation, "accuracy"> | null
   },
   content: string,
   role: string,

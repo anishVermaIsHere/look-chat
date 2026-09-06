@@ -27,7 +27,7 @@ export default function ChatOptions({ chatData, menu }:{ chatData: ChatData, men
           const Icon = m.icon
           return  <DropdownMenuGroup key={m.label}>
               <DropdownMenuItem onClick={(e)=>m.handler(e, chatData?.id)}>
-                <span>{<Icon />}</span>
+                <span>{Icon && <Icon />}</span>
                 {m.label}
                 <DropdownMenuShortcut></DropdownMenuShortcut>
               </DropdownMenuItem>

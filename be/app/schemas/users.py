@@ -16,8 +16,8 @@ class UserContact(BaseModel):
 class UserBase(BaseModel):
     first_name: str
     last_name: str
-    full_name: str
-    contact: UserContact
+    # full_name: str
+    # contact: UserContact
     email: EmailStr
 
 

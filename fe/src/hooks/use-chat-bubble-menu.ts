@@ -1,6 +1,5 @@
-import { useContext } from "react"
 import type { MouseEvent } from "react"
-import { ChatContext } from "@/context/chat-context"
+import { useChatContext } from "@/context/chat-context"
 import { Icons } from "@/widgets/icons"
 import { useQueryClient } from "@tanstack/react-query"
 import { deleteChat } from "@/features/chat/services/apis/chat"
@@ -10,7 +9,7 @@ import type { ChatOption } from "@/features/chat/types/chat"
 
 export default function useChatBubbleMenu(){
   const queryClient = useQueryClient();
-  const { chat: { setMessages }} = useContext(ChatContext);
+  const { chat: { setMessages }} = useChatContext();
 
   return [
     {
