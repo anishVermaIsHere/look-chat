@@ -2,6 +2,7 @@ from app.core.config import LOGIN
 from tests.database import db
 
 
+
 # Test case - Unauthorised
 def test_user_unauthorised(client):
     response = client.get("/api/v1/users/profile")

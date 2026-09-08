@@ -17,7 +17,7 @@ def chat_get():
     return { "success": True }
 
 @router.post("", response_class=JSONResponse, summary="Chat with AI", description="Accepts a user message and returns an AI-generated response.")
-def chat(req: Request, payload: MessagePayload, db: Session = Depends(get_db)):
+def chat_create(req: Request, payload: MessagePayload, db: Session = Depends(get_db)):
     """
     Request Payload Example
     {
