@@ -36,7 +36,10 @@ def get_db() -> Generator[Session, None, None]:
         raise RuntimeError("Database engine is not initialized.")
     
     db = SessionLocal()
+
     try:
+        # db_name = db.get_bind().url.database
+        # print(f"Connected to database: {db_name}")
         yield db
     finally:
         db.close()

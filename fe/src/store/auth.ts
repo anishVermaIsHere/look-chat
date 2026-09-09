@@ -9,6 +9,7 @@ export type AuthStoreType = {
   isAuthenticated: boolean;
   isLoading: boolean;
   isInitialized: boolean;
+  setLoading: (val: boolean) => void;
   setUser: (user: User | null) => void;
   logOut: () => Promise<void>;
   init: () => Promise<void>;
@@ -20,6 +21,7 @@ const useAuthStore = create<AuthStoreType>((set, get) => ({
   isAuthenticated: false,
   isInitialized: false,
   isLoading: true,
+  setLoading: (val) => set({ isLoading: val }),
   setUser: (user) => set({ user, isAuthenticated: user?.id ? true : false }),
   logOut: async () => { 
     const res = await logout();

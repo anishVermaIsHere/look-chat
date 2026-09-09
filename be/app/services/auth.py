@@ -61,10 +61,13 @@ class AuthService():
             ).first()
     
         if not user:
+            print("NOT USER")
             raise Exception("Email does not exist")
 
         secure_pwd = SecurePassword()
         is_password_matched = secure_pwd.verify_pwd(payload.password, user.password)
+
+        print("USER", payload, user)
 
         if not is_password_matched:
             raise Exception("Incorrect password")

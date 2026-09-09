@@ -8,6 +8,7 @@ def test_streaming_message(client):
         "content": SAMPLE_MESSAGE,
         "sender": { "id": "user-667", "location": {} }
     }
+    
 
     login_response = client.post("/api/v1/auth/login", json={ "email": LOGIN["EMAIL"], "password": LOGIN["PASSWORD"] })
     assert login_response.status_code == 200

@@ -95,7 +95,7 @@ Backend Folder Structure
  |-- start-win.sh
  |-- tests
  |--  |-- conftest.py
- |--  |-- database.py
+ |--  |-- test_stream_message.py
  |--  |-- test_auth.py
  |--  |-- __init__.py
 
@@ -219,7 +219,7 @@ Frontend Folder Structure
 ```
 
 ### Screen Video
-[DemoVideo](https://www.loom.com/share/28cb6245128849f68c1093186ccd0454)
+[DemoVideo](https://www.loom.com/share/c8ac36e810874534ada6f8bf02a92e81)
 
 
 

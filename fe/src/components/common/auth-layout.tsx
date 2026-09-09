@@ -10,14 +10,18 @@ import Spinner from "@/widgets/spinner"
 const AuthLayout = ()  => {
   const { HOME, LOGIN } = ROUTES;
   const location = useLocation();
-  const { isAuthenticated, isLoading, init } = useAuthStore((state) => state);
+  const { isAuthenticated, isLoading, setLoading, init } = useAuthStore((state) => state);
   const publicRoutes = [HOME, LOGIN, "/u/:token"];
   const protectedRoutes = [`/chat`];
   const isProtectedRoute = protectedRoutes.some((route) =>matchPath(route, location.pathname));
   const isPublicRoute = publicRoutes.some((route) =>matchPath(route, location.pathname));
 
   useEffect(()=>{
-    init();
+    if(!publicRoutes.includes(location.pathname)) { 
+      init();
+      return;
+    }
+    setLoading(false);
   }, [init])
 
   if(isLoading) return <Spinner />
