@@ -23,11 +23,10 @@ A full-stack AI chat application built with React and FastAPI.
 - Chat creation
 - Message sending
 - AI streaming responses
-- Markdown rendering
+- Markdown rendering with (bold, code formatting)
 - Reasoning/thinking messages
 - Auto-scrolling
-- Chat history
-- Logout
+- Chat search, rename title and history
 - Responsive chat interface
 
 ---
