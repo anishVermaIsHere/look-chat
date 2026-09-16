@@ -3,7 +3,7 @@ name: Deploy App
 on: 
   workflow_dispatch:
   push: 
-    branches: [main,dev]
+    branches: [main, master, dev]
     paths:
       - 'be/**'
       - '.github/workflows/deploy-backend.yml'
