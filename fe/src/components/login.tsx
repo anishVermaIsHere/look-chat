@@ -1,5 +1,5 @@
 import { isAxiosError } from "axios"
-import { toast } from "@/components/ui/toast"
+import { toast } from "@/context/toast-context"
 import useAuthStore from "@/store/auth"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -16,12 +16,12 @@ import BrandLogo from "@/widgets/logo"
 export default function Login() {
   const { setUser } = useAuthStore(s=>s);
   const navigate = useNavigate();
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [, setSearchParams] = useSearchParams();
   const form = useForm({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: AppConfig.defaultUser.email,
-      password: AppConfig.defaultUser.password,
+      password: AppConfig.defaultUser.password
     },
   });
 

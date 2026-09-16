@@ -7,7 +7,7 @@ from sqlalchemy import select
 
 from app.database.models.chat import Chat
 from app.database.models.message import MessageRole
-from app.schemas.chat import MessagePayload
+from app.schemas.chat import MessagePayload, ChatUpdate
 from app.services.assistant import AssistantService
 from app.services.message import MessageService
 from app.services.ai import AIService
@@ -164,6 +164,20 @@ class ChatService:
         db.commit()
 
         return { "success": True }
+
+    def update_by_id(self, chat_id: uuid.UUID, payload: ChatUpdate, db: Session):
+        chat = db.query(Chat).filter(Chat.id == chat_id)
+        chat_item = chat.first()
+
+        if chat_item is None:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Chat with id {chat_id} not found")
+
+        update_data = payload.model_dump(exclude_unset=True)
+        chat.update(update_data, synchronize_session="evaluate")
+        db.commit()
+        db.refresh(chat_item)
+
+        return { "success": True, "chat": chat_item }
 
     def search(self, q: str | None, user_id: uuid.UUID, db: Session):
         query = (

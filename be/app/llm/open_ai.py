@@ -1,4 +1,5 @@
-from openai import OpenAI
+from openai import OpenAI, AuthenticationError
+from fastapi import HTTPException
 
 from app.core.config import MODEL_API_KEY
 from app.llm.base import LLMProvider
@@ -11,38 +12,51 @@ class OpenAIProvider(LLMProvider):
         self.model = model
 
     def ask(self, message: str) -> str:
-        response = self.client.responses.create(
-            model=self.model,  # Make sure model name is correct (e.g. gpt-4o-mini)
-            input=[
-                { 
-                    "role": "user", 
+        try:
+            response = self.client.responses.create(
+                model=self.model,  # Make sure model name is correct (e.g. gpt-4o-mini)
+                input=[
+                    { 
+                        "role": "user", 
 
 
-                    "content": [
-                        {
-                            "type": "input_text",
-                            "text": message
-                        },
-                    ] 
-                }
-            ]
-        )
-        return response.output_text
+                        "content": [
+                            {
+                                "type": "input_text",
+                                "text": message
+                            },
+                        ] 
+                    }
+                ]
+            )
+            return response.output_text
+
+        except AuthenticationError:
+            raise HTTPException(
+                status_code=502,
+                detail="LLM provider authentication failed"
+            )
 
     def stream(self, messages):
+        try:
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=messages,
+                stream=True
+            )
 
-        response = self.client.chat.completions.create(
-            model=self.model,
-            messages=messages,
-            stream=True
-        )
+            for chunk in response:
 
-        for chunk in response:
+                if not chunk.choices:
+                    continue
 
-            if not chunk.choices:
-                continue
+                content = chunk.choices[0].delta.content
 
-            content = chunk.choices[0].delta.content
+                if content:
+                    yield content
 
-            if content:
-                yield content
+        except AuthenticationError:
+            raise HTTPException(
+                status_code=502,
+                detail="LLM provider authentication failed"
+            )

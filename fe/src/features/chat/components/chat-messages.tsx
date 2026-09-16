@@ -3,17 +3,18 @@ import {
     MessageScrollerItem,
     MessageScrollerButton,
     MessageScrollerContent,
-    MessageScrollerViewport,
-    useMessageScroller
+    MessageScrollerViewport
 } from "@/components/ui/message-scroller"
+import { useMessageScroller } from "@/hooks/message"
 import { MessageAnimated } from "@/features/chat/components/message-animated"
+import type { Message } from "@/features/chat/types/chat"
 
 export default function ChatMessages({
     messages,
     isBusy,
     status
 }: {
-    messages: any[];
+    messages: Message[];
     isBusy: boolean;
     status: string;
 }) {

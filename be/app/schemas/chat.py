@@ -28,4 +28,5 @@ class ChatResponse(BaseModel):
     chat_id: str
     messages: list[MessageResponse]
     
-
+class ChatUpdate(BaseModel):
+    title: str

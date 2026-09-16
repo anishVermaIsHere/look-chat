@@ -7,26 +7,34 @@ import { API_ENDPOINTS } from "@/services/apis/endpoints"
 import { getUserLocation } from "@/utils"
 import { ChatContext } from "@/context/chat-context"
 import type { UserLocation } from "../types/chat"
+import { toast } from "@/context/toast-context"
 
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
     const [input, setInput] = useState<string>("");
     const [chatId, setChatId] = useState<string>("");
+    const [selectedRenameChat, setSelectedRenameChat]  = useState("");
     const [location, setLocation] = useState<Omit<UserLocation, "accuracy"> | null>(null);
     const chat = useChat({
             transport: new TextStreamChatTransport({
               api: `${AppConfig.baseUrl}/api/v1${API_ENDPOINTS.CHAT.sendMessage()}`,
               credentials: "include",
               fetch: async (url, options) => {
-                  const res = await fetch(url, {
-                      ...options,
-                      method: "POST",
-                      credentials: "include",
-                  });
-                 const newChatId = res.headers.get("x-chat-id");
+                const res = await fetch(url, {
+                    ...options,
+                    method: "POST",
+                    credentials: "include",
+                });
+                if(!res.ok) {
+                    const textRes = JSON.parse(await res.text() ?? "{}");
+                    toast.add({ type: "error", priority: "high", description: textRes?.detail });
+                    return res;
+                }
+                const newChatId = res.headers.get("x-chat-id");
                 if (newChatId && !chatId) {
                     setChatId(newChatId); 
                 }
+  
                 return res;
               },
               prepareSendMessagesRequest: async ({ messages }) => {
@@ -67,7 +75,7 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
   return (
-    <ChatContext value={{ chat, input, setInput, chatId, setChatId }}>
+    <ChatContext value={{ chat, input, setInput, chatId, setChatId, selectedRenameChat, setSelectedRenameChat }}>
       <div data-testid="chat-context-wrapper">
       {children}
       </div>

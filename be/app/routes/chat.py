@@ -6,8 +6,8 @@ from sqlalchemy.orm import Session
 from typing import Annotated
 
 from app.database.database import get_db
-from app.schemas.chat import MessagePayload
-from app.controllers.chat import create_message, delete_chat, get_chat, search_chat
+from app.schemas.chat import MessagePayload, ChatUpdate
+from app.controllers.chat import create_message, delete_chat, update_chat, get_chat, search_chat
 
 router = APIRouter(prefix="/chats", tags=["Chat"])
 
@@ -49,3 +49,7 @@ def chat_query(req: Request, query: Annotated[str | None, Query(min_length=3, ma
 @router.get("/{chat_id}", response_class=JSONResponse, summary="Chat fetch", description="Accepts chat_id and pass it to controller to fetch chat")
 def chat_fetch(chat_id: uuid.UUID, db: Session = Depends(get_db)):
     return get_chat(chat_id, db)
+
+@router.put("/{chat_id}", response_class=JSONResponse, summary="Chat update", description="Accepts chat_id and pass it to controller to update chat")
+def chat_update(chat_id: str, payload: ChatUpdate, req: Request = None, db: Session = Depends(get_db)):
+    return update_chat(chat_id, payload, db)

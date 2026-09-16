@@ -34,7 +34,7 @@ type MessageParts = {
 export type Message = {
   parts: MessageParts[],
   id: string,
-  role: "user" | "assistant"
+  role: "user" | "assistant" | "system" | "tool"
 }
 
 export type UserLocation = {

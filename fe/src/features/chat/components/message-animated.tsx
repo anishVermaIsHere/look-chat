@@ -6,7 +6,7 @@ import { MESSAGE_ANIMATIONS } from "@/lib/message-animations"
 import MarkdownRenderer from "@/components/common/markdown-referer"
 import Typing from "@/widgets/typing"
 import BrandLogo from "@/widgets/logo"
-import { toast } from "@/components/ui/toast"
+import { toast } from "@/context/toast-context"
 
 
 function Message({ align, children }: { align: "start" | "end"; children: React.ReactNode }) {

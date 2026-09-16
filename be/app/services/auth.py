@@ -67,8 +67,6 @@ class AuthService():
         secure_pwd = SecurePassword()
         is_password_matched = secure_pwd.verify_pwd(payload.password, user.password)
 
-        print("USER", payload, user)
-
         if not is_password_matched:
             raise Exception("Incorrect password")
 
@@ -107,7 +105,7 @@ class AuthService():
         user_data.pop("created_at", None)
         safe_user_data = jsonable_encoder(user_data)
 
-        await redis.set(user_cache_key, json.dumps(safe_user_data), expire=3600)
+        await redis.set(user_cache_key, json.dumps(safe_user_data), expire=600)
 
         return {"authenticated": True, "user": safe_user_data }
         

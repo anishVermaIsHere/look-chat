@@ -1,22 +1,17 @@
 import * as React from "react"
-import {
-  MessageScroller as MessageScrollerPrimitive,
-  useMessageScroller,
-  useMessageScrollerScrollable,
-  useMessageScrollerVisibility,
-} from "@shadcn/react/message-scroller"
+import { MessageScroller as MessageScrollerPrimitive } from "@shadcn/react/message-scroller"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Icons } from "@/widgets/icons"
 
-function MessageScrollerProvider(
+export function MessageScrollerProvider(
   props: React.ComponentProps<typeof MessageScrollerPrimitive.Provider>
 ) {
   return <MessageScrollerPrimitive.Provider {...props} />
 }
 
-function MessageScroller({
+export function MessageScroller({
   className,
   ...props
 }: React.ComponentProps<typeof MessageScrollerPrimitive.Root>) {
@@ -32,7 +27,7 @@ function MessageScroller({
   )
 }
 
-function MessageScrollerViewport({
+export function MessageScrollerViewport({
   className,
   ...props
 }: React.ComponentProps<typeof MessageScrollerPrimitive.Viewport>) {
@@ -48,7 +43,7 @@ function MessageScrollerViewport({
   )
 }
 
-function MessageScrollerContent({
+export function MessageScrollerContent({
   className,
   ...props
 }: React.ComponentProps<typeof MessageScrollerPrimitive.Content>) {
@@ -61,7 +56,7 @@ function MessageScrollerContent({
   )
 }
 
-function MessageScrollerItem({
+export function MessageScrollerItem({
   className,
   scrollAnchor = false,
   ...props
@@ -79,7 +74,7 @@ function MessageScrollerItem({
   )
 }
 
-function MessageScrollerButton({
+export function MessageScrollerButton({
   direction = "end",
   className,
   children,
@@ -114,16 +109,4 @@ function MessageScrollerButton({
       )}
     </MessageScrollerPrimitive.Button>
   )
-}
-
-export {
-  MessageScrollerProvider,
-  MessageScroller,
-  MessageScrollerViewport,
-  MessageScrollerContent,
-  MessageScrollerItem,
-  MessageScrollerButton,
-  useMessageScroller,
-  useMessageScrollerScrollable,
-  useMessageScrollerVisibility,
 }

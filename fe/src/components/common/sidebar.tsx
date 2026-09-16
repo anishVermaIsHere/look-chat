@@ -7,17 +7,18 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  useSidebar,
 } from "@/components/ui/sidebar"
 import useAuthStore from "@/store/auth"
 import { getUserChats } from "@/features/user/services/apis/user"
-import { getChat, searchChat } from "@/features/chat/services/apis/chat"
+import { getChat, searchChat, renameChat } from "@/features/chat/services/apis/chat"
 import { useQuery } from "@tanstack/react-query"
+import { useQueryClient } from "@tanstack/react-query"
 import Spinner from "@/widgets/spinner"
 import ChatOptions from "@/features/chat/components/chat-option"
 import type { ChatData, ResponseMessage } from "@/features/chat/types/chat"
 import useChatBubbleMenu from "@/hooks/use-chat-bubble-menu"
 import { useChatContext } from "@/context/chat-context"
+import { useSidebar } from "@/context/sidebar-context"
 import BrandLogo from "@/widgets/logo"
 import Searchbar from "@/features/chat/components/searchbar"
 import useAppStore from "@/store/app"
@@ -32,9 +33,10 @@ async function onSearch(query: string): Promise<ChatData[]>{
 }
 
 export default function AppSidebar() {
+  const queryClient = useQueryClient();
   const { user } = useAuthStore(s=>s);
   const menu = useChatBubbleMenu();
-  const { chatId, setChatId, chat } = useChatContext();
+  const { chatId, setChatId, chat, selectedRenameChat, setSelectedRenameChat } = useChatContext();
   const { searchInput } = useAppStore(s=>s);
   const { toggleSidebar, isMobile } = useSidebar();
 
@@ -115,8 +117,34 @@ export default function AppSidebar() {
             <SidebarMenuItem key={ch?.id}>
               <SidebarMenuButton 
                 className={`font-light flex justify-between ${chatId === ch.id ? 'bg-[#403c55]' : ''} `} 
-                onClick={()=>loadChat(ch?.id as string)}>
-                <span className="truncate" title={ch?.title}>{ch?.title}</span>
+                onClick={()=>{
+                  if(selectedRenameChat) return;
+                  loadChat(ch?.id as string)
+                }}>
+                <span 
+                contentEditable={selectedRenameChat === ch.id} 
+                suppressContentEditableWarning
+                onBlur={async (e) => {
+                  const modifiedTitle = e.currentTarget.textContent?.trim() ?? "";
+                  const isSame = modifiedTitle === ch.title.trim();
+
+                  setSelectedRenameChat("");
+
+                  if(isSame) return;
+                  if (modifiedTitle) {
+                    const res = await renameChat(selectedRenameChat, modifiedTitle);
+                     if (res?.data?.success) {
+                      await queryClient.invalidateQueries({
+                        queryKey: ["chats"],
+                      });
+                      chat?.setMessages([]);
+                    }
+                  }
+                }}
+                className={`truncate block w-full ${selectedRenameChat === ch.id ? 'border border-gray-100 py-1' : ''}`} 
+                title={ch?.title}>
+                  {ch?.title}
+                </span>
                 <ChatOptions chatData={ch} menu={menu}/>
               </SidebarMenuButton>
             </SidebarMenuItem>

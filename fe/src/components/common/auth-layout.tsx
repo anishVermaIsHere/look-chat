@@ -22,7 +22,7 @@ const AuthLayout = ()  => {
       return;
     }
     setLoading(false);
-  }, [init])
+  }, [init, setLoading, location.pathname]);
 
   if(isLoading) return <Spinner />
   

@@ -1,5 +1,5 @@
 import { isAxiosError } from "axios"
-import { toast } from "@/components/ui/toast"
+import { toast } from "@/context/toast-context"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { registerSchema, type RegisterSchema } from "@/schemas/common"
@@ -13,7 +13,7 @@ import BrandLogo from "@/widgets/logo"
 
 
 export default function Register() {
-    const [searchParams, setSearchParams] = useSearchParams();
+    const [, setSearchParams] = useSearchParams();
     const form = useForm({
         resolver: zodResolver(registerSchema),
         defaultValues: {

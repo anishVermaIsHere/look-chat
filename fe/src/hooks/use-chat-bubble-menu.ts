@@ -9,13 +9,14 @@ import type { ChatOption } from "@/features/chat/types/chat"
 
 export default function useChatBubbleMenu(){
   const queryClient = useQueryClient();
-  const { chat: { setMessages }} = useChatContext();
+  const { chat: { setMessages }, setSelectedRenameChat } = useChatContext();
 
   return [
     {
       label: "Rename",
-      handler: (e: MouseEvent, chatId: string) => {
+      handler: async (e: MouseEvent, chatId: string) => {
         e.stopPropagation();
+        setSelectedRenameChat(chatId);
       },
       icon: Icons.pencil,
       type: "button",
