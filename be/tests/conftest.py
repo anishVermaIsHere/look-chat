@@ -2,6 +2,7 @@ import os
 from dotenv import load_dotenv
 
 from app.database.models.user import User
+from app.database.models.assistant import Assistant
 from app.utils.security import SecurePassword
 
 # Load .env.test before any test or app module imports
@@ -72,6 +73,16 @@ def client(db):
     # 7. Clean up dependency overrides after test
     app.dependency_overrides.clear()
 
+
+@pytest.fixture(autouse=True)
+def create_test_assistant(db):
+    """Automatically creates an assistant"""
+    # Check if test assistant already exists
+    existing_assistant = db.query(Assistant).filter(Assistant.name == "Look").first()
+    if not existing_assistant:
+        test_asst = Assistant(name="Look")
+        db.add(test_asst)
+        db.commit()
 
 @pytest.fixture(autouse=True)
 def create_test_user(db):
