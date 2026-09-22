@@ -1,4 +1,4 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, ConfigDict
 from uuid import UUID, uuid4
 
 # generating unique id
@@ -26,7 +26,6 @@ class CreateUser(UserBase):
 
 
 class UserResponse(UserBase):
+    model_config = ConfigDict(from_attributes=True)
+    
     id: UUID
-
-    class Config:
-        from_attributes = True
