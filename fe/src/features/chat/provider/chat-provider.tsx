@@ -11,7 +11,7 @@ import { toast } from "@/context/toast-context"
 
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
-    const [input, setInput] = useState<string>("");
+    const [input, setInput] = useState<string>("explore vector db");
     const [chatId, setChatId] = useState<string>("");
     const [selectedRenameChat, setSelectedRenameChat]  = useState("");
     const [location, setLocation] = useState<Omit<UserLocation, "accuracy"> | null>(null);
@@ -34,14 +34,12 @@ export function ChatProvider({ children }: { children: React.ReactNode }) {
                 if (newChatId && !chatId) {
                     setChatId(newChatId); 
                 }
-  
                 return res;
               },
               prepareSendMessagesRequest: async ({ messages }) => {
                   const lastMessage = messages[messages.length - 1];
-                  const textPart = lastMessage?.parts.find(
-                      (part) => part.type === "text"
-                  );
+                  const textPart = lastMessage?.parts.find((part) => part.type === "text");
+                
                   return {
                       body: {
                       chat_id: chatId,

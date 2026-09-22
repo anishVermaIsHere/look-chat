@@ -137,7 +137,10 @@ class ChatService:
             return chat
         
         chat_title = generate_chat_title(payload.content)
-        return self.create(user_id, db, chat_title)
+        chat = self.create(user_id, db, chat_title)
+        db.flush()
+
+        return chat
 
     def create(self, user_id: uuid.UUID, db: Session, chat_title: str) -> Chat:
         chat = Chat(title=chat_title, user_id=user_id)

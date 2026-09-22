@@ -1,10 +1,12 @@
 import uuid
+import json
 
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse, StreamingResponse
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
+from app.database.models.chat import Chat
 from app.schemas.chat import MessagePayload, ChatUpdate
 from app.services.chat import ChatService
 
@@ -18,22 +20,36 @@ def get_user_chats(user_id: str, db: Session):
 
 def create_message(payload: MessagePayload, db: Session, req: Request):
     try:
+        is_new_chat = not payload.chat_id
         user_id = req.state.user["sub"]
+        chat = chat_service.get_or_create_chat(user_id, db, payload)
 
         def generate_message():
-            res = chat_service.stream_message(user_id, chat.id, db, payload)
-            for chunk in res:
-                yield chunk
+            try:
+                res = chat_service.stream_message(user_id, chat.id, db, payload)
+                for chunk in res:
+                    yield chunk
+
+            except Exception as stream_err:
+                print("Mid-stream LLM Error:", stream_err)
+                
+                if is_new_chat:
+                    try:
+                        db.rollback() # Discard current session state
+                        chat_service.delete_by_id(chat.id, db)
+                    except Exception as cleanup_err:
+                        print("Failed to cleanup chat:", cleanup_err)
+                
+                raise stream_err
 
         response = StreamingResponse(generate_message(), media_type="text/event-stream")
         response.headers["x-chat-id"] = str(chat.id)
         response.headers["Access-Control-Expose-Headers"] = "x-chat-id"
 
-        chat = chat_service.get_or_create_chat(user_id, db, payload)
-
         return response
 
     except Exception as error:
+        db.rollback()
         print("LLM Error:", error)
         raise HTTPException(status_code=502, detail="LLM request failed")
 
