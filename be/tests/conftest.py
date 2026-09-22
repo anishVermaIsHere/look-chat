@@ -78,9 +78,9 @@ def client(db):
 def create_test_assistant(db):
     """Automatically creates an assistant"""
     # Check if test assistant already exists
-    existing_assistant = db.query(Assistant).filter(Assistant.name == "Look").first()
+    existing_assistant = db.query(Assistant).filter(Assistant.name == "Look AI").first()
     if not existing_assistant:
-        test_asst = Assistant(name="Look")
+        test_asst = Assistant(name="Look AI")
         db.add(test_asst)
         db.commit()
 
