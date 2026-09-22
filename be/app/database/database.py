@@ -1,8 +1,9 @@
+
+import os
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, Session, sessionmaker
 from typing import Generator
-
-from app.core.config import DB
 
 class Base(DeclarativeBase):
     pass
@@ -14,8 +15,9 @@ SessionLocal = None
 def init_db() -> None:
     """Initialize the database engine and session factory on app startup."""
     global engine, SessionLocal
+    database_uri = os.getenv("DATABASE_URL")
     engine = create_engine(
-        DB["URI"],
+        database_uri,
         pool_size=10,        # Number of persistent connections in pool
         max_overflow=20,     # Max temporary connections allowed under high load
         pool_pre_ping=True   # Automatically checks/reconnects stale DB connections

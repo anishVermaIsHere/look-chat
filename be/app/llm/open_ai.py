@@ -7,7 +7,7 @@ from app.llm.base import LLMProvider
 
 class OpenAIProvider(LLMProvider):
     
-    def __init__(self, model: str = "gpt-5.6-luna"):
+    def __init__(self, model: str = "gpt-6-luna"):
         self.client = OpenAI(api_key=MODEL_API_KEY["OPENAI"])
         self.model = model
 

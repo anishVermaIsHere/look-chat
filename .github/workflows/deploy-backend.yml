@@ -12,6 +12,22 @@ jobs:
   build-and-push:
     name: Build and push image
     runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: test_db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -26,9 +42,19 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Create .env.test file from Secret
+        run: |
+          echo "${{ secrets.TEST }}" > ./be/.env.test
       
       - name: Run tests
         working-directory: ./be
+        # env:
+        #   DATABASE_URL: ${{ secrets.DATABASE_URL }}
+        #   OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        #   LOGIN_EMAIL: ${{ secrets.LOGIN_EMAIL }}
+        #   LOGIN_PASSWORD: ${{ secrets.LOGIN_PASSWORD }}
+        #   REDIS_ENABLED: ${{ secrets.REDIS_ENABLED }}
         run: pytest
       
       - name: Set up Docker Buildx

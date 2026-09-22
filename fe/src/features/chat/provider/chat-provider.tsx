@@ -11,7 +11,7 @@ import { toast } from "@/context/toast-context"
 
 
 export function ChatProvider({ children }: { children: React.ReactNode }) {
-    const [input, setInput] = useState<string>("explore vector db");
+    const [input, setInput] = useState<string>("");
     const [chatId, setChatId] = useState<string>("");
     const [selectedRenameChat, setSelectedRenameChat]  = useState("");
     const [location, setLocation] = useState<Omit<UserLocation, "accuracy"> | null>(null);

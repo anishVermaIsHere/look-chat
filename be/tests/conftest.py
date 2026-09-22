@@ -1,9 +1,14 @@
 import os
 from dotenv import load_dotenv
 
+from app.database.models.user import User
+from app.utils.security import SecurePassword
+
 # Load .env.test before any test or app module imports
 load_dotenv(".env.test", override=True)
 
+# if os.getenv("DATABASE_URL"):
+#     os.environ["DATABASE_URL"] = os.getenv("DATABASE_URL")
 
 TEST_DATABASE_URL = os.getenv("DATABASE_URL")
 
@@ -11,6 +16,7 @@ LOGIN = {
     "EMAIL": os.getenv("LOGIN_EMAIL"),
     "PASSWORD": os.getenv("LOGIN_PASSWORD")
 }
+
 
 if not TEST_DATABASE_URL:
     raise RuntimeError(
@@ -66,6 +72,24 @@ def client(db):
     # 7. Clean up dependency overrides after test
     app.dependency_overrides.clear()
 
+
+@pytest.fixture(autouse=True)
+def create_test_user(db):
+    """Automatically creates a test user in the fresh database before tests run."""
+    # Check if test user already exists
+    existing_user = db.query(User).filter(User.email == LOGIN["EMAIL"]).first()
+    if not existing_user:
+        secure_pwd = SecurePassword()
+        test_user = User(
+            first_name="Test",
+            last_name="User",
+            full_name="Test User",
+            contact={},
+            email=LOGIN["EMAIL"],
+            password=secure_pwd.hash_pwd(LOGIN["PASSWORD"])
+        )
+        db.add(test_user)
+        db.commit()
 
 @pytest.fixture
 def auth_client(client):
