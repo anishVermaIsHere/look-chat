@@ -31,6 +31,10 @@ A full-stack AI chat application built with React and FastAPI.
 
 ---
 
+## Architecture
+
+![](./diagram.png)
+
 ## Folder Architecture
 
 Backend Folder Structure
